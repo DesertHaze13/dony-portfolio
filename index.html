@@ -1,7 +1,18 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#10151b">
+<meta name="theme-color" content="#f5f7f2">
+<script>
+function syncThemeToLocalTime() {
+  const hour = new Date().getHours();
+  const theme = hour >= 7 && hour < 18 ? 'light' : 'dark';
+  document.documentElement.dataset.theme = theme;
+  document.querySelector('meta[name="theme-color"]').content = theme === 'light' ? '#f5f7f2' : '#10151b';
+}
+syncThemeToLocalTime();
+document.addEventListener('visibilitychange', () => { if (!document.hidden) syncThemeToLocalTime(); });
+setInterval(syncThemeToLocalTime, 60_000);
+</script>
 <meta name="description" content="Dony Prihantoro. Backend developer. Four personal products, thoughtfully built.">
 <meta property="og:title" content="Dony Prihantoro — Backend developer">
 <meta property="og:description" content="Complexity, quietly solved. Selected personal work by Dony Prihantoro.">
@@ -53,7 +64,7 @@ html[data-theme=dark]{color-scheme:dark;--paper:#171616;--ink:#f8f2e9;--muted:#b
 .bio-site-link{display:block;text-decoration:none;color:inherit}.bio-screen{height:auto!important;aspect-ratio:1264/712;background:#e9f6f2}.bio-screen:after{display:none}.bio-screen img{position:static!important;display:block;width:100%!important;height:100%!important;object-fit:cover;transform:none!important;filter:none!important}.bio-screen .shot-label{z-index:3}
 /* Clear, spacious project imagery */.bio-screen{height:auto!important;aspect-ratio:auto;min-height:380px;padding:clamp(16px,3.5vw,44px);background:radial-gradient(circle at 82% 14%,#d2faf0,transparent 38%),linear-gradient(135deg,#b6e3d6,#ebf7ef 60%,#d6e9e1)}.bio-screen img{width:min(100%,1080px)!important;height:auto!important;aspect-ratio:1265/712;object-fit:contain;border-radius:12px;box-shadow:0 25px 65px rgba(20,72,64,.22),0 2px 8px rgba(20,72,64,.1)}.bio-screen .shot-label{left:clamp(25px,4.5vw,60px);bottom:clamp(25px,4.5vw,60px)}.actual-shot{background-image:radial-gradient(circle at 80% 18%,rgba(255,255,255,.72),transparent 34%),linear-gradient(145deg,rgba(255,255,255,.3),transparent 65%)}.actual-shot img{width:min(48%,285px);border:5px solid #f7f7f5;border-radius:38px 38px 0 0;box-shadow:0 24px 55px rgba(26,39,44,.24),0 3px 12px rgba(26,39,44,.12)}.client-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.client-card{padding:18px 18px 26px;border-radius:8px;box-shadow:0 8px 30px rgba(37,32,28,.035)}.client-visual{height:auto;aspect-ratio:16/10;border-radius:5px}.client-visual:has(img){background:linear-gradient(140deg,#d8dfe3,#f2f1ed)}.client-visual:has(img) img{width:calc(100% - 32px);height:calc(100% - 32px);object-fit:contain;filter:drop-shadow(0 10px 16px rgba(19,31,45,.18))}.client-arbo .client-visual{background:radial-gradient(circle at 70% 20%,#f9fcff,#cad7e9)}.client-arbo .client-visual img{width:auto;height:92%;border-radius:16px;filter:drop-shadow(0 14px 18px rgba(30,43,69,.25))}.client-index{z-index:2}@media(max-width:700px){.bio-screen{min-height:0;padding:12px 12px 28px}.bio-screen img{border-radius:7px}.bio-screen .shot-label{left:19px;bottom:34px}.actual-shot img{width:min(48%,220px)}.client-grid{grid-template-columns:1fr}.client-card{padding:14px 14px 22px}.client-visual{aspect-ratio:16/10}}/* Progressive screenshot previews */.client-redbull .client-visual{background:#527dba url("assets/images/client/wings-for-life.jpg") center/cover no-repeat}.client-rabo .client-visual{background:#ddad47 url("assets/images/client/rabobank-it.jpg") center/cover no-repeat}.client-nn .client-visual{background:#5c9550 url("assets/images/client/nn-sustainability.jpg") center/cover no-repeat}.client-arbo .client-visual{background:#e4edf9 url("assets/images/client/arbo-techniek.jpg") center/auto 92% no-repeat}
 /* 2026 portfolio direction: an editorial, electric-dark project gallery. */
-:root,html[data-theme=dark]{color-scheme:dark;--paper:#10151b;--ink:#f4f5ee;--muted:#a7b3b7;--line:#39434a;--hero:#171f27;--accent:#cbf66b;--dark:#d9f0de;--darkink:#111a1d}
+html[data-theme=dark]{color-scheme:dark;--paper:#10151b;--ink:#f4f5ee;--muted:#a7b3b7;--line:#39434a;--hero:#171f27;--accent:#cbf66b;--dark:#d9f0de;--darkink:#111a1d}
 body{font-family:'Space Grotesk',Arial,sans-serif;letter-spacing:-.01em;background:var(--paper)}
 .wrap{width:min(100% - 72px,1440px)}
 .nav{height:86px;position:relative;z-index:20}.brand{font-size:28px;letter-spacing:-.09em}.nav-links{font-size:11px;gap:38px}.nav-contact{border-color:var(--accent);color:var(--accent)}.nav-contact:hover{background:var(--accent);color:#10151b!important}
@@ -92,7 +103,37 @@ body{font-family:'Space Grotesk',Arial,sans-serif;letter-spacing:-.01em;backgrou
 .studio-extra{display:grid;gap:10px;padding-top:15px;font-size:12px;line-height:1.5;color:#d6e0db}
 .studio-extra b{display:block;color:#a6bdab;text-transform:uppercase;letter-spacing:.1em;font-size:10px;margin-bottom:2px}
 @media(max-width:700px){.studio-grid{grid-template-columns:1fr}.studio-archive{margin-top:24px}.studio-card{padding:24px}.studio-kind{max-width:45%}}
-.hero-actions{flex-wrap:wrap}</style>
+.hero-actions{flex-wrap:wrap}
+/* Daylight palette follows the visitor's local clock. */
+html[data-theme=light]{color-scheme:light;--paper:#f5f7f2;--ink:#172923;--muted:#50645f;--line:#cbd7ce;--hero:#e9f0e8;--accent:#306e43;--dark:#dcebdd;--darkink:#172923}
+html[data-theme=light] .hero{background:var(--hero)}
+html[data-theme=light] .hero:before{background:#c8e7a7}
+html[data-theme=light] .hero:after{background:linear-gradient(transparent,var(--hero))}
+html[data-theme=light] .hero-mark{color:rgba(48,110,67,.10)}
+html[data-theme=light] .hero-desc,html[data-theme=light] .text-link,html[data-theme=light] .hero-bottom{color:var(--ink)}
+html[data-theme=light] .button{background:var(--ink);color:#fff}
+html[data-theme=light] .button:hover{background:var(--accent);color:#fff}
+html[data-theme=light] .nav-contact:hover{background:var(--accent);color:#fff!important}
+html[data-theme=light] .project-tagline{color:var(--ink)}
+html[data-theme=light] .tag{color:var(--ink);border-color:var(--line)}
+html[data-theme=light] .client-section{background:#e5ede6}
+html[data-theme=light] .client-card{background:#fff;border-color:var(--line)}
+html[data-theme=light] .client-card:hover{border-color:var(--accent)}
+html[data-theme=light] .client-card p{color:var(--ink)}
+html[data-theme=light] .client-type{color:var(--muted)}
+html[data-theme=light] .studio-archive{background:#fff;color:var(--ink);border-color:var(--line)}
+html[data-theme=light] .studio-archive>summary small,html[data-theme=light] .studio-intro,html[data-theme=light] .studio-number,html[data-theme=light] .studio-extra b{color:var(--muted)}
+html[data-theme=light] .studio-grid{background:var(--line);border-color:var(--line)}
+html[data-theme=light] .studio-card{background:#fff}
+html[data-theme=light] .studio-card p,html[data-theme=light] .studio-extra{color:var(--muted)}
+html[data-theme=light] .studio-kind,html[data-theme=light] .studio-card summary{color:var(--accent)}
+html[data-theme=light] .studio-card summary{border-color:var(--line)}
+html[data-theme=light] .archive-plus{border-color:var(--line)}
+html[data-theme=light] .studio-archive>summary:hover .archive-plus,html[data-theme=light] .studio-archive>summary:focus-visible .archive-plus{background:var(--accent);border-color:var(--accent);color:#fff}
+html[data-theme=light] .footer{background:#cbe7b4;color:var(--ink)}
+html[data-theme=light] .footer .section-kicker,html[data-theme=light] .footer-actions a{color:var(--ink);border-color:var(--ink)}
+html[data-theme=light] .footer-actions a:hover{background:var(--ink);color:#fff}
+</style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>

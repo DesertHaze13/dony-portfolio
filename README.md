@@ -5,7 +5,9 @@ A static portfolio for Dony's personal products and selected work built with tea
 ## Structure
 
 ```text
-index.html                 Page content, styles, and small interactions
+index.html                 Page structure and metadata
+styles.css                 Responsive design, motion, and day/night palettes
+script.js                  Project content and small interactions
 assets/images/profile/     Portrait
 assets/images/personal/    Personal project previews
 assets/images/client/      Client project previews approved for public display
@@ -15,9 +17,11 @@ GitHub Pages serves the repository root. There is no build step or package depen
 
 ## Updating the portfolio
 
-1. Edit `index.html` and keep the visible project copy short. Longer app and development details belong in collapsed `<details>` sections.
-2. Put new visuals in the matching `assets/images/` folder and reference them from `index.html` with relative paths.
+1. Add or update projects in the `personal`, `client`, or `archive` arrays in `script.js`. Keep visible copy short. Longer app and development details belong in collapsed `<details>` sections.
+2. Put new visuals in the matching `assets/images/` folder and reference them from `script.js` with relative paths.
 3. Use only public or cleared client imagery. Do not commit client source code, credentials, internal documents, private dashboards, or user data.
 4. Verify the desktop and mobile layout, then push to `main`. GitHub Pages deploys from the repository root.
 
 Client projects are presented as team work, with high-level descriptions only. Personal products are shown separately.
+
+The visual theme uses each visitor's local device time: light from 07:00 to 17:59, dark from 18:00 to 06:59. It refreshes when the page becomes visible and once per minute while open.

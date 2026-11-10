@@ -40,19 +40,24 @@ function detailBlock(item,isClient=false){
   return `<details class="${isClient?'client-details':'project-details'}"><summary>Explore project <span class="plus" aria-hidden="true">+</span></summary><div class="${grid}"><div><h4>Overview</h4><p>${esc(item.overview)}</p></div><div><h4>App features</h4><ul>${item.features.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></div><div><h4>Development</h4><p>${esc(item.development)}</p></div>${item.code?`<div class="code-snapshot"><small>${esc(item.codeLabel||'Code snapshot')}${item.source?` · <a href="${item.source}" target="_blank" rel="noopener noreferrer">View source ↗</a>`:''}</small><pre><code>${esc(item.code)}</code></pre>${item.codeAdapted?'<span class="code-note">Abridged from project source; names and formatting simplified.</span>':''}</div>`:''}</div></details>`;
 }
 function personalCard(p){
-  const visual=p.visual==='current'?`<div class="visual-copy"><small>Current / personal finance</small><strong>Money,<br>in motion.</strong></div><img src="${p.image}" alt="${esc(p.imageAlt)}" loading="lazy">`: `<img src="${p.image}" alt="${esc(p.imageAlt)}" loading="lazy">`;
-  return `<article ${p.visual==='plate'?'id="plate"':''} class="project-card reveal ${p.visual==='current'?'featured':''}"><a class="project-visual visual-${p.visual}" href="${p.full}" data-lightbox data-lightbox-title="${esc(p.name)}" aria-label="View ${esc(p.name)} screen">${visual}<span class="visual-label">${esc(p.label)}</span></a><div class="project-meta"><span>${p.number} / ${esc(p.category)}</span><span>Personal product</span></div><h3>${esc(p.name)}</h3><p class="project-tagline">${esc(p.tagline)}</p><p class="project-description">${esc(p.description)}</p><div class="tech-list">${p.tech.map(t=>`<span>${esc(t)}</span>`).join('')}</div>${detailBlock(p)}<div class="project-links"><a href="${p.full}" data-lightbox data-lightbox-title="${esc(p.name)}">View screen ↗</a>${p.site?`<a href="${p.site}" target="_blank" rel="noopener noreferrer">Visit site ↗</a>`:''}${p.repo?`<a href="${p.repo}" target="_blank" rel="noopener noreferrer">GitHub ↗</a>`:''}</div></article>`;
+  const visual=p.visual==='current'?`<div class="visual-copy"><small>Current / personal finance</small><strong>Money,<br>in motion.</strong></div><img src="${p.image}" alt="${esc(p.imageAlt)}" loading="lazy" decoding="async">`: `<img src="${p.image}" alt="${esc(p.imageAlt)}" loading="lazy" decoding="async">`;
+  return `<article ${p.visual==='plate'?'id="plate"':''} class="project-card reveal ${p.visual==='current'?'featured':''}"><a class="project-visual visual-${p.visual} is-loading" href="${p.full}" data-lightbox data-lightbox-title="${esc(p.name)}" aria-label="View ${esc(p.name)} screen">${visual}<span class="visual-label">${esc(p.label)}</span></a><div class="project-meta"><span>${p.number} / ${esc(p.category)}</span><span>Personal product</span></div><h3>${esc(p.name)}</h3><p class="project-tagline">${esc(p.tagline)}</p><p class="project-description">${esc(p.description)}</p><div class="tech-list">${p.tech.map(t=>`<span>${esc(t)}</span>`).join('')}</div>${detailBlock(p)}<div class="project-links"><a href="${p.full}" data-lightbox data-lightbox-title="${esc(p.name)}">View screen ↗</a>${p.site?`<a href="${p.site}" target="_blank" rel="noopener noreferrer">Visit site ↗</a>`:''}${p.repo?`<a href="${p.repo}" target="_blank" rel="noopener noreferrer">GitHub ↗</a>`:''}</div></article>`;
 }
 function clientCard(p,i){
-  const visual=p.image?`<img src="${p.image}" alt="${esc(p.alt)}" loading="lazy">`:`<span aria-hidden="true">${p.symbol}</span>`;
+  const visual=p.image?`<img src="${p.image}" alt="${esc(p.alt)}" loading="lazy" decoding="async">`:`<span aria-hidden="true">${p.symbol}</span>`;
   const style=p.color?` style="background:${p.color}"`:'';
-  const visualClass=`client-visual ${p.phone?'phone':''} ${!p.image?'illustration':''}`;
+  const visualClass=`client-visual ${p.phone?'phone':''} ${p.image?'is-loading':'illustration'}`;
   const visualMarkup=p.full?`<a class="${visualClass}" href="${p.full}" data-lightbox data-lightbox-title="${esc(p.name)}" aria-label="View ${esc(p.name)} screen"${style}>${visual}<span class="visual-label">Project screen</span></a>`:`<div class="${visualClass}"${style}>${visual}</div>`;
   return `<article class="client-card reveal">${visualMarkup}<div class="client-content"><div class="project-meta"><span>${String(i+personal.length+1).padStart(2,'0')} / ${esc(p.category)}</span><span>Team project</span></div><h3>${esc(p.name)}</h3><p class="project-tagline">${esc(p.tagline)}</p>${detailBlock(p,true)}${p.full?`<a class="client-screen" href="${p.full}" data-lightbox data-lightbox-title="${esc(p.name)}">View screen ↗</a>`:''}</div></article>`;
 }
 document.getElementById('personal-projects').innerHTML=personal.map(personalCard).join('');
 document.getElementById('client-projects').innerHTML=client.map(clientCard).join('');
 document.getElementById('archive-projects').innerHTML=archive.map(([name,type,description],i)=>`<article class="archive-item"><small>${String(i+1).padStart(2,'0')} / ${esc(type)}</small><h3>${esc(name)}</h3><p>${esc(description)}</p></article>`).join('');
+document.querySelectorAll('.project-visual.is-loading img,.client-visual.is-loading img').forEach(img=>{
+  const finish=()=>img.parentElement.classList.remove('is-loading');
+  if(img.complete)finish();
+  else{img.addEventListener('load',finish,{once:true});img.addEventListener('error',finish,{once:true})}
+});
 document.getElementById('year').textContent=new Date().getFullYear();
 
 function setTheme(){const theme=new Date().getHours()>=7&&new Date().getHours()<18?'light':'dark';document.documentElement.dataset.theme=theme;document.querySelector('meta[name="theme-color"]').content=theme==='light'?'#f4f2eb':'#101b1b'}
@@ -66,15 +71,19 @@ const imageDialog=document.getElementById('image-dialog');
 const dialogImage=imageDialog.querySelector('img');
 const dialogCaption=document.getElementById('image-dialog-caption');
 let imageOpener;
+dialogImage.addEventListener('load',()=>imageDialog.classList.remove('is-loading'));
+dialogImage.addEventListener('error',()=>imageDialog.classList.remove('is-loading'));
 document.addEventListener('click',event=>{
   const link=event.target.closest('a[data-lightbox]');
   if(!link)return;
   event.preventDefault();
   imageOpener=link;
+  imageDialog.classList.add('is-loading');
   dialogImage.src=link.href;
   dialogImage.alt=link.querySelector('img')?.alt||`${link.dataset.lightboxTitle} screenshot`;
   dialogCaption.textContent=link.dataset.lightboxTitle||'Project screen';
   imageDialog.showModal();
+  if(dialogImage.complete)imageDialog.classList.remove('is-loading');
 });
 imageDialog.querySelector('.image-dialog-close').addEventListener('click',()=>imageDialog.close());
 imageDialog.addEventListener('click',event=>{if(event.target===imageDialog)imageDialog.close()});

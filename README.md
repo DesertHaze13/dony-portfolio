@@ -19,7 +19,7 @@ GitHub Pages serves the repository root. There is no build step or package depen
 
 1. Add or update projects in the `personal`, `client`, or `archive` arrays in `script.js`. Keep visible copy short. Longer app and development details belong in collapsed `<details>` sections.
 2. Put new visuals in the matching `assets/images/` folder and reference them from `script.js` with relative paths.
-3. Use only public or cleared client imagery. Do not commit client source code, credentials, internal documents, private dashboards, or user data.
+3. Use only public or cleared client imagery. Code cards may contain brief, reviewed excerpts from project source; keep them abridged and free of credentials, endpoints, internal documents, private dashboards, and user data. Never commit whole client source files.
 4. Verify the desktop and mobile layout, then push to `main`. GitHub Pages deploys from the repository root.
 
 Client projects are presented as team work, with high-level descriptions only. Personal products are shown separately.

@@ -25,3 +25,5 @@ GitHub Pages serves the repository root. There is no build step or package depen
 Client projects are presented as team work, with high-level descriptions only. Personal products are shown separately.
 
 The visual theme uses each visitor's local device time: light from 07:00 to 17:59, dark from 18:00 to 06:59. It refreshes when the page becomes visible and once per minute while open.
+
+Plate is the fifth personal project. Its supplied iPhone screenshot is published as `assets/images/personal/plate-screen.png`, with a smaller JPEG card preview; the original pixels are preserved. The project links to the personal public Plate repository.

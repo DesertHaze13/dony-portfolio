@@ -70,7 +70,36 @@ if('IntersectionObserver' in window){const observer=new IntersectionObserver(ent
 const imageDialog=document.getElementById('image-dialog');
 const dialogImage=imageDialog.querySelector('img');
 const dialogCaption=document.getElementById('image-dialog-caption');
+const dialogGallery=imageDialog.querySelector('.image-dialog-gallery');
 let imageOpener;
+let activeScreens=[];
+let activeScreen=0;
+let activeProject='';
+const personalScreens=Object.fromEntries(personal.map(project=>[project.name,project.screens||[{src:project.full,label:'Overview',alt:project.imageAlt}]]));
+personalScreens.Current=[
+  {src:A+'personal/current-demo.png',label:'Overview',alt:'Current demo dashboard with spending summary'},
+  {src:A+'personal/current-spending.png',label:'Spending',alt:'Current spending screen with category exploration and on-device AI review'}
+];
+personalScreens["Dony's Lifts"]=[
+  {src:A+'personal/dony-lifts-screen.png',label:'Workout',alt:"Dony's Lifts workout journal and weekly progress"},
+  {src:A+'personal/dony-lifts-sync-demo.png',label:'Sync demo',alt:"Illustrative Dony's Lifts sync and local backup screen with a demo email address"}
+];
+personalScreens['Run Detective']=[
+  {src:A+'personal/run-detective-screen.png',label:'Latest run',alt:'Run Detective latest run and workout context'},
+  {src:A+'personal/run-detective-trends.png',label:'Trends',alt:'Run Detective iPad trends charts for distance, pace and heart rate'}
+];
+function showGalleryScreen(index){
+  activeScreen=(index+activeScreens.length)%activeScreens.length;
+  const screen=activeScreens[activeScreen];
+  imageDialog.classList.add('is-loading');
+  dialogImage.src=screen.src;
+  dialogImage.alt=screen.alt||`${activeProject} ${screen.label} screenshot`;
+  dialogCaption.textContent=`${activeProject} · ${screen.label}`;
+  dialogGallery.querySelectorAll('button').forEach((button,i)=>{
+    button.setAttribute('aria-current',i===activeScreen?'true':'false');
+  });
+  if(dialogImage.complete)imageDialog.classList.remove('is-loading');
+}
 dialogImage.addEventListener('load',()=>imageDialog.classList.remove('is-loading'));
 dialogImage.addEventListener('error',()=>imageDialog.classList.remove('is-loading'));
 document.addEventListener('click',event=>{
@@ -78,13 +107,27 @@ document.addEventListener('click',event=>{
   if(!link)return;
   event.preventDefault();
   imageOpener=link;
-  imageDialog.classList.add('is-loading');
-  dialogImage.src=link.href;
-  dialogImage.alt=link.querySelector('img')?.alt||`${link.dataset.lightboxTitle} screenshot`;
-  dialogCaption.textContent=link.dataset.lightboxTitle||'Project screen';
+  activeProject=link.dataset.lightboxTitle||'Project screen';
+  activeScreens=personalScreens[activeProject]||[{src:link.href,label:'Overview',alt:link.querySelector('img')?.alt}];
+  dialogGallery.replaceChildren();
+  activeScreens.forEach((screen,index)=>{
+    const button=document.createElement('button');
+    button.type='button';
+    button.textContent=screen.label;
+    button.setAttribute('aria-label',`Show ${activeProject} ${screen.label} screenshot`);
+    button.addEventListener('click',()=>showGalleryScreen(index));
+    dialogGallery.append(button);
+  });
+  dialogGallery.hidden=activeScreens.length<2;
+  imageDialog.classList.toggle('has-gallery',activeScreens.length>1);
+  showGalleryScreen(0);
   imageDialog.showModal();
-  if(dialogImage.complete)imageDialog.classList.remove('is-loading');
 });
 imageDialog.querySelector('.image-dialog-close').addEventListener('click',()=>imageDialog.close());
 imageDialog.addEventListener('click',event=>{if(event.target===imageDialog)imageDialog.close()});
+imageDialog.addEventListener('keydown',event=>{
+  if(activeScreens.length<2)return;
+  if(event.key==='ArrowRight'){event.preventDefault();showGalleryScreen(activeScreen+1)}
+  if(event.key==='ArrowLeft'){event.preventDefault();showGalleryScreen(activeScreen-1)}
+});
 imageDialog.addEventListener('close',()=>{dialogImage.removeAttribute('src');imageOpener?.focus()});

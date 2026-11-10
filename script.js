@@ -41,12 +41,14 @@ function detailBlock(item,isClient=false){
 }
 function personalCard(p){
   const visual=p.visual==='current'?`<div class="visual-copy"><small>Current / personal finance</small><strong>Money,<br>in motion.</strong></div><img src="${p.image}" alt="${esc(p.imageAlt)}" loading="lazy">`: `<img src="${p.image}" alt="${esc(p.imageAlt)}" loading="lazy">`;
-  return `<article ${p.visual==='plate'?'id="plate"':''} class="project-card reveal ${p.visual==='current'?'featured':''}"><a class="project-visual visual-${p.visual}" href="${p.full}" target="_blank" rel="noopener noreferrer" aria-label="View ${esc(p.name)} screen">${visual}<span class="visual-label">${esc(p.label)}</span></a><div class="project-meta"><span>${p.number} / ${esc(p.category)}</span><span>Personal product</span></div><h3>${esc(p.name)}</h3><p class="project-tagline">${esc(p.tagline)}</p><p class="project-description">${esc(p.description)}</p><div class="tech-list">${p.tech.map(t=>`<span>${esc(t)}</span>`).join('')}</div>${detailBlock(p)}<div class="project-links"><a href="${p.full}" target="_blank" rel="noopener noreferrer">View screen ↗</a>${p.site?`<a href="${p.site}" target="_blank" rel="noopener noreferrer">Visit site ↗</a>`:''}${p.repo?`<a href="${p.repo}" target="_blank" rel="noopener noreferrer">GitHub ↗</a>`:''}</div></article>`;
+  return `<article ${p.visual==='plate'?'id="plate"':''} class="project-card reveal ${p.visual==='current'?'featured':''}"><a class="project-visual visual-${p.visual}" href="${p.full}" data-lightbox data-lightbox-title="${esc(p.name)}" aria-label="View ${esc(p.name)} screen">${visual}<span class="visual-label">${esc(p.label)}</span></a><div class="project-meta"><span>${p.number} / ${esc(p.category)}</span><span>Personal product</span></div><h3>${esc(p.name)}</h3><p class="project-tagline">${esc(p.tagline)}</p><p class="project-description">${esc(p.description)}</p><div class="tech-list">${p.tech.map(t=>`<span>${esc(t)}</span>`).join('')}</div>${detailBlock(p)}<div class="project-links"><a href="${p.full}" data-lightbox data-lightbox-title="${esc(p.name)}">View screen ↗</a>${p.site?`<a href="${p.site}" target="_blank" rel="noopener noreferrer">Visit site ↗</a>`:''}${p.repo?`<a href="${p.repo}" target="_blank" rel="noopener noreferrer">GitHub ↗</a>`:''}</div></article>`;
 }
 function clientCard(p,i){
   const visual=p.image?`<img src="${p.image}" alt="${esc(p.alt)}" loading="lazy">`:`<span aria-hidden="true">${p.symbol}</span>`;
   const style=p.color?` style="background:${p.color}"`:'';
-  return `<article class="client-card reveal"><div class="client-visual ${p.phone?'phone':''} ${!p.image?'illustration':''}"${style}>${visual}${p.image?'<span class="visual-label">Project screen</span>':''}</div><div class="client-content"><div class="project-meta"><span>${String(i+personal.length+1).padStart(2,'0')} / ${esc(p.category)}</span><span>Team project</span></div><h3>${esc(p.name)}</h3><p class="project-tagline">${esc(p.tagline)}</p>${detailBlock(p,true)}${p.full?`<a class="client-screen" href="${p.full}" target="_blank" rel="noopener noreferrer">View screen ↗</a>`:''}</div></article>`;
+  const visualClass=`client-visual ${p.phone?'phone':''} ${!p.image?'illustration':''}`;
+  const visualMarkup=p.full?`<a class="${visualClass}" href="${p.full}" data-lightbox data-lightbox-title="${esc(p.name)}" aria-label="View ${esc(p.name)} screen"${style}>${visual}<span class="visual-label">Project screen</span></a>`:`<div class="${visualClass}"${style}>${visual}</div>`;
+  return `<article class="client-card reveal">${visualMarkup}<div class="client-content"><div class="project-meta"><span>${String(i+personal.length+1).padStart(2,'0')} / ${esc(p.category)}</span><span>Team project</span></div><h3>${esc(p.name)}</h3><p class="project-tagline">${esc(p.tagline)}</p>${detailBlock(p,true)}${p.full?`<a class="client-screen" href="${p.full}" data-lightbox data-lightbox-title="${esc(p.name)}">View screen ↗</a>`:''}</div></article>`;
 }
 document.getElementById('personal-projects').innerHTML=personal.map(personalCard).join('');
 document.getElementById('client-projects').innerHTML=client.map(clientCard).join('');
@@ -59,3 +61,21 @@ const progress=document.getElementById('progress');let scrollPending=false;
 function updateProgress(){const max=document.documentElement.scrollHeight-innerHeight;progress.style.width=(max>0?Math.min(100,scrollY/max*100):0)+'%';scrollPending=false}
 addEventListener('scroll',()=>{if(!scrollPending){scrollPending=true;requestAnimationFrame(updateProgress)}},{passive:true});updateProgress();
 if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{for(const entry of entries){if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}}},{rootMargin:'0px 0px -55px 0px',threshold:.06});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el))}else document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'));
+
+const imageDialog=document.getElementById('image-dialog');
+const dialogImage=imageDialog.querySelector('img');
+const dialogCaption=document.getElementById('image-dialog-caption');
+let imageOpener;
+document.addEventListener('click',event=>{
+  const link=event.target.closest('a[data-lightbox]');
+  if(!link)return;
+  event.preventDefault();
+  imageOpener=link;
+  dialogImage.src=link.href;
+  dialogImage.alt=link.querySelector('img')?.alt||`${link.dataset.lightboxTitle} screenshot`;
+  dialogCaption.textContent=link.dataset.lightboxTitle||'Project screen';
+  imageDialog.showModal();
+});
+imageDialog.querySelector('.image-dialog-close').addEventListener('click',()=>imageDialog.close());
+imageDialog.addEventListener('click',event=>{if(event.target===imageDialog)imageDialog.close()});
+imageDialog.addEventListener('close',()=>{dialogImage.removeAttribute('src');imageOpener?.focus()});

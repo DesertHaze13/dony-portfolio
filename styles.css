@@ -23,3 +23,10 @@ html[data-theme=dark]{color-scheme:dark;--paper:#101b1b;--surface:#1b2928;--ink:
 @media(prefers-reduced-motion:reduce){.visual-plate:hover img{transform:none}}
 .code-snapshot .code-note{display:block;color:#a8c8b2;font-size:10px;line-height:1.5;margin-top:12px}
 .code-snapshot a{text-decoration:underline;text-underline-offset:3px}
+.image-dialog{width:max-content;max-width:min(94vw,1400px);max-height:94dvh;margin:auto;padding:0;border:1px solid var(--line);border-radius:18px;background:var(--surface);color:var(--ink);box-shadow:0 24px 80px rgba(0,0,0,.38);overflow:hidden}
+.image-dialog::backdrop{background:rgba(5,16,18,.82);backdrop-filter:blur(8px)}
+.image-dialog-content{display:flex;flex-direction:column;align-items:center;overflow:auto;max-height:94dvh}
+.image-dialog-content img{display:block;width:auto;height:auto;max-width:min(94vw,1400px);max-height:calc(94dvh - 54px);object-fit:contain}
+.image-dialog-content p{width:100%;margin:0;padding:15px 65px 16px 20px;font-size:13px;font-weight:700;letter-spacing:.02em}
+.image-dialog-close{position:absolute;z-index:1;top:12px;right:12px;width:42px;height:42px;border:0;border-radius:50%;background:#102322;color:#fff;font:400 28px/1 Montserrat,sans-serif;cursor:pointer;box-shadow:0 3px 15px rgba(0,0,0,.25)}
+.image-dialog-close:hover,.image-dialog-close:focus-visible{background:#d45e45;outline:2px solid #fff;outline-offset:2px}

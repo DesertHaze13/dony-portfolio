@@ -78,10 +78,20 @@ let activeProject='';
 const personalScreens=Object.fromEntries(personal.map(project=>[project.name,project.screens||[{src:project.full,label:'Overview',alt:project.imageAlt}]]));
 personalScreens.Current=[
   {src:A+'personal/current-demo.png',label:'Overview',alt:'Current demo dashboard with spending summary'},
-  {src:A+'personal/current-spending.png',label:'Spending',alt:'Current spending screen with category exploration and on-device AI review'}
+  {src:A+'personal/current-spending.png',label:'Spending',alt:'Current spending screen with category exploration and on-device AI review'},
+  {src:A+'personal/current-shortcuts.png',label:'Automatic logging',alt:'iOS Shortcuts automation passing selected app notification text to Current for transaction review'}
+];
+personalScreens.Bioenial=[
+  {src:A+'personal/bioenial-home.png',label:'Home',alt:'Bioenial public home page'},
+  {src:A+'personal/bioenial-guide.png',label:'Learning guide',alt:'Bioenial public guide explaining learning roles and class activities'}
+];
+personalScreens.Plate=[
+  {src:A+'personal/plate-screen.png',label:'Daily view',alt:'Plate daily nutrition journal screenshot'},
+  {src:A+'personal/plate-log-meal.jpg',label:'Log a meal',alt:'Plate meal capture options for AI description, camera, photos and image import'}
 ];
 personalScreens["Dony's Lifts"]=[
   {src:A+'personal/dony-lifts-screen.png',label:'Workout',alt:"Dony's Lifts workout journal and weekly progress"},
+  {src:A+'personal/dony-lifts-workout-detail.png',label:'Sets & reps',alt:"Dony's Lifts workout detail with editable sets, loads and rep targets"},
   {src:A+'personal/dony-lifts-sync-demo.png',label:'Sync demo',alt:"Illustrative Dony's Lifts sync and local backup screen with a demo email address"}
 ];
 personalScreens['Run Detective']=[

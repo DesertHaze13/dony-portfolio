@@ -102,3 +102,30 @@ html[data-theme=dark]{color-scheme:dark;--paper:#101b1b;--surface:#1b2928;--ink:
 .image-dialog .image-dialog-gallery .gallery-bubble{min-height:clamp(82px,9vw,124px);border-radius:50%;padding:15px;pointer-events:auto}
 .image-dialog .image-dialog-stage>img{max-width:100%;max-height:calc(94dvh - 100px)}
 @media(max-width:700px){.image-dialog .image-dialog-stage>img{max-height:none}.image-dialog .image-dialog-gallery .gallery-bubble{min-height:82px;padding:11px}.image-dialog.is-loading{width:100vw}}
+/* The viewer is a transparent stage; the screenshot panel is the only solid surface. */
+.image-dialog,.image-dialog.is-loading{width:min(96vw,1500px);max-width:none;background:transparent;border:0;border-radius:0;box-shadow:none;overflow:visible}
+.image-dialog-content,.image-dialog.is-loading .image-dialog-content{width:calc(100% - 292px);max-height:90dvh;margin:auto;overflow:visible;border:1px solid var(--line);border-radius:22px;background:var(--surface);box-shadow:0 28px 90px rgba(0,0,0,.36)}
+.image-dialog-stage{min-height:0;padding:22px;overflow:visible}
+.image-dialog .image-dialog-stage>img{max-height:calc(90dvh - 95px)}
+.image-dialog-skeleton{inset:22px}
+.image-dialog .image-dialog-gallery{overflow:visible}
+.image-dialog .image-dialog-gallery .gallery-bubble{left:-132px;top:30%;width:116px;min-height:82px;padding:13px 15px;border:1px solid rgba(255,255,255,.7);border-radius:28px 34px 30px 36px;background:#f5f7ef;color:#1b302a;box-shadow:0 16px 32px rgba(3,21,18,.25),0 3px 9px rgba(3,21,18,.13);font:750 12px/1.18 Montserrat,sans-serif;letter-spacing:-.035em}
+.image-dialog .image-dialog-gallery .gallery-bubble.bubble-right{left:auto;right:-132px;top:58%;background:#c9f76b;color:#203020}
+.image-dialog .image-dialog-gallery .gallery-bubble:nth-child(n+3){top:72%}
+.gallery-bubble .bubble-orbit{display:grid;place-items:center;width:25px;height:25px;border-radius:9px;background:#e3eae0;font-size:16px;line-height:1}
+.gallery-bubble.bubble-right .bubble-orbit{background:#a8db48}
+.gallery-bubble .bubble-label{display:block;align-self:stretch;line-height:1.15;overflow-wrap:normal;word-break:normal}
+.image-dialog-close{top:4px;right:calc((100% - (100% - 292px))/2 - 14px)}
+@media(max-width:700px){
+  .image-dialog,.image-dialog.is-loading{width:100vw;height:100dvh;max-height:none;overflow:auto}
+  .image-dialog-content,.image-dialog.is-loading .image-dialog-content{width:calc(100% - 24px);max-height:none;margin:104px auto 24px;border-radius:18px}
+  .image-dialog-stage{padding:12px;overflow:visible}
+  .image-dialog .image-dialog-stage>img{max-height:none;width:100%;height:auto}
+  .image-dialog .image-dialog-gallery .gallery-bubble{top:-88px;left:7px;width:112px;min-height:70px;padding:10px 12px;border-radius:22px 26px 24px 28px;font-size:11px}
+  .image-dialog .image-dialog-gallery .gallery-bubble.bubble-right{top:-88px;right:7px;left:auto}
+  .image-dialog .image-dialog-gallery .gallery-bubble:nth-child(n+3){top:-88px}
+  .image-dialog-skeleton{inset:12px;min-height:300px}
+  .image-dialog.is-loading .image-dialog-stage{min-height:350px}
+  .image-dialog-close{top:12px;right:12px}
+}
+@media(max-width:700px){.image-dialog-close{right:calc(50% - 22px)}}

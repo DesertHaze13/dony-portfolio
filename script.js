@@ -129,8 +129,9 @@ function renderGalleryBubbles(){
     button.type='button';
     button.className=`gallery-bubble ${position%2?'bubble-right':'bubble-left'} bubble-enter`;
     button.style.setProperty('--bubble-order',String(position));
-    button.innerHTML='<span class="bubble-label"></span>';
+    button.innerHTML='<span class="bubble-body" aria-hidden="true"><span class="bubble-lens"></span><span class="bubble-film"></span><span class="bubble-shine"></span></span><span class="bubble-burst" aria-hidden="true"></span><span class="bubble-label"></span>';
     button.querySelector('.bubble-label').textContent=screen.label;
+    button.style.setProperty('--bubble-img',`url("${encodeURI(screen.src)}")`);
     button.setAttribute('aria-label',`Show ${activeProject} ${screen.label} screenshot`);
     button.addEventListener('click',()=>{
       if(gallerySwitching)return;
@@ -143,6 +144,13 @@ function renderGalleryBubbles(){
       },reduceGalleryMotion.matches?0:330);
     });
     dialogGallery.append(button);
+  });
+  if(others.length)['d1','d2','d3'].forEach(name=>{
+    const deco=document.createElement('span');
+    deco.className=`bubble-deco ${name}`;
+    deco.setAttribute('aria-hidden','true');
+    deco.innerHTML='<span class="bubble-body"><span class="bubble-film"></span><span class="bubble-shine"></span></span>';
+    dialogGallery.append(deco);
   });
   dialogGallery.hidden=others.length===0;
 }

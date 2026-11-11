@@ -129,6 +129,47 @@ html[data-theme=dark]{color-scheme:dark;--paper:#101b1b;--surface:#1b2928;--ink:
   .image-dialog-close{top:12px;right:12px}
 }
 @media(max-width:700px){.image-dialog-close{right:calc(50% - 22px)}}
+/* Iridescent soap bubbles, with a clear label at their centre. */
+.image-dialog .image-dialog-gallery .gallery-bubble,
+.image-dialog .image-dialog-gallery .gallery-bubble.bubble-right{
+  position:absolute;
+  display:grid;
+  place-items:center;
+  width:132px;
+  height:132px;
+  min-height:132px;
+  aspect-ratio:1;
+  padding:15px;
+  border:1px solid rgba(255,255,255,.88);
+  border-radius:50%;
+  color:#142923;
+  background:
+    radial-gradient(circle at 32% 22%,rgba(255,255,255,.94) 0%,rgba(255,255,255,.28) 23%,transparent 46%),
+    radial-gradient(circle at 76% 76%,rgba(169,246,227,.4) 0%,transparent 43%),
+    radial-gradient(circle at 17% 79%,rgba(255,214,244,.5) 0%,transparent 38%),
+    radial-gradient(circle at 50% 48%,rgba(244,253,250,.86) 0%,rgba(234,249,249,.77) 50%,rgba(196,224,250,.54) 78%,rgba(255,229,246,.7) 100%);
+  box-shadow:
+    inset 6px 8px 13px rgba(255,255,255,.82),
+    inset -9px -12px 18px rgba(135,155,211,.31),
+    inset 0 0 0 4px rgba(255,255,255,.18),
+    0 24px 37px rgba(2,19,19,.24),
+    0 4px 14px rgba(173,227,245,.18);
+  backdrop-filter:blur(5px);
+  -webkit-backdrop-filter:blur(5px);
+  text-align:center;
+  font:750 12px/1.2 Montserrat,sans-serif;
+}
+.image-dialog .image-dialog-gallery .gallery-bubble{left:-147px}
+.image-dialog .image-dialog-gallery .gallery-bubble.bubble-right{left:auto;right:-147px}
+.image-dialog .image-dialog-gallery .gallery-bubble::before{content:"";position:absolute;inset:8px;border-radius:50%;border:1px solid rgba(255,255,255,.42);box-shadow:inset 0 2px 3px rgba(255,255,255,.5);pointer-events:none}
+.image-dialog .image-dialog-gallery .gallery-bubble::after{content:"";position:absolute;top:15px;left:24px;width:37px;height:13px;border-radius:50%;background:rgba(255,255,255,.82);filter:blur(5px);transform:rotate(-34deg);pointer-events:none}
+.image-dialog .gallery-bubble .bubble-label{position:relative;z-index:1;max-width:94px;text-shadow:0 1px 5px rgba(255,255,255,.95);text-wrap:balance}
+@media(max-width:700px){
+  .image-dialog .image-dialog-gallery .gallery-bubble,
+  .image-dialog .image-dialog-gallery .gallery-bubble.bubble-right{top:-94px;width:94px;height:94px;min-height:94px;padding:10px;font-size:10px}
+  .image-dialog .image-dialog-gallery .gallery-bubble{left:5px}
+  .image-dialog .image-dialog-gallery .gallery-bubble.bubble-right{left:auto;right:5px}
+}
 .image-dialog-content,.image-dialog.is-loading .image-dialog-content{width:min(calc(100% - 292px),var(--viewer-width,620px));transition:width .42s cubic-bezier(.2,.8,.2,1)}
 .image-dialog .image-dialog-gallery .gallery-bubble{display:grid;place-items:center;left:-139px;width:126px;min-height:98px;aspect-ratio:1.28;padding:20px;border:2px solid rgba(255,255,255,.82);border-radius:51% 49% 54% 46% / 47% 53% 48% 52%;background:radial-gradient(circle at 27% 23%,#fff 0%,#f8f8ef 27%,#d7ebde 100%);box-shadow:inset 8px 8px 16px rgba(255,255,255,.72),inset -8px -10px 18px rgba(78,118,101,.16),0 20px 35px rgba(5,25,23,.25),0 3px 8px rgba(5,25,23,.13);text-align:center;font:750 12px/1.2 Montserrat,sans-serif;letter-spacing:-.025em}
 .image-dialog .image-dialog-gallery .gallery-bubble.bubble-right{right:-139px;background:radial-gradient(circle at 27% 23%,#f7ffd9 0%,#dbfc89 34%,#a6de62 100%);box-shadow:inset 8px 8px 16px rgba(255,255,255,.65),inset -8px -10px 18px rgba(65,120,49,.22),0 20px 35px rgba(5,25,23,.25),0 3px 8px rgba(5,25,23,.13)}

@@ -153,6 +153,7 @@ async function popBubble(button,event){
   await Promise.all(animations);
 }
 function renderGalleryBubbles(){
+  window.BubbleGlass?.clear();
   dialogGallery.replaceChildren();
   const others=activeScreens.map((screen,index)=>({screen,index})).filter(item=>item.index!==activeScreen);
   others.forEach(({screen,index},position)=>{
@@ -176,6 +177,7 @@ function renderGalleryBubbles(){
       dialogGallery.querySelector('button')?.focus({preventScroll:true});
     });
     dialogGallery.append(button);
+    window.BubbleGlass?.mount(button,position*3.7);
   });
   if(others.length)['d1','d2','d3'].forEach(name=>{
     const deco=document.createElement('span');
@@ -205,4 +207,4 @@ imageDialog.addEventListener('keydown',event=>{
   if(event.key==='ArrowRight'){event.preventDefault();showGalleryScreen(activeScreen+1)}
   if(event.key==='ArrowLeft'){event.preventDefault();showGalleryScreen(activeScreen-1)}
 });
-imageDialog.addEventListener('close',()=>{galleryRequest++;gallerySwitching=false;dialogImage.removeAttribute('src');imageOpener?.focus()});
+imageDialog.addEventListener('close',()=>{window.BubbleGlass?.clear();galleryRequest++;gallerySwitching=false;dialogImage.removeAttribute('src');imageOpener?.focus()});

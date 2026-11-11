@@ -196,3 +196,32 @@ html[data-theme=dark]{color-scheme:dark;--paper:#101b1b;--surface:#1b2928;--ink:
 @media(prefers-reduced-motion:reduce){
   .image-dialog .image-dialog-gallery .gallery-bubble,.bubble-deco,.bubble-body,.bubble-film{animation:none!important}
 }
+/* Live optics: the shader only paints light; the DOM behind remains visible. */
+.bubble-body{
+  --light-x:30%;--light-y:24%;
+  background:radial-gradient(ellipse at var(--light-x) var(--light-y),#f3ffff0d,transparent 44%),radial-gradient(closest-side,transparent 65%,#baeaff16 87%,#ffe4fb22 96%,transparent);
+  backdrop-filter:blur(.6px) saturate(1.5) contrast(1.08) brightness(1.13);
+  -webkit-backdrop-filter:blur(.6px) saturate(1.5) contrast(1.08) brightness(1.13);
+  box-shadow:inset 0 0 0 .6px #fff9,inset 3px 0 9px #8cddff38,inset -3px -1px 10px #efadff30,0 2px 8px #0000000a;
+}
+.bubble-body.has-refraction{backdrop-filter:url(#bubble-refraction) saturate(1.4) brightness(1.12)}
+.bubble-optics{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;border-radius:50%}
+.has-optics .bubble-film,.has-optics .bubble-shine{display:none}
+/* Saturated thin-film fallback if WebGL is unavailable or its context is lost. */
+.bubble-film{opacity:.95;background:conic-gradient(from 24deg,#6ce7ff80,#9d8cff,#ff9cdd,#ffcf72,#9affca,#70ceff,#e8a4ff,#ffb199,#6ce7ff80);
+  -webkit-mask:radial-gradient(closest-side,transparent 74%,#0002 83%,#000a 94%,#000 98%,transparent 100%);
+  mask:radial-gradient(closest-side,transparent 74%,#0002 83%,#000a 94%,#000 98%,transparent 100%)}
+.image-dialog .gallery-bubble .bubble-label{z-index:1}
+/* Labels sit on the optical centre, with softer contrast against the film. */
+.image-dialog .image-dialog-gallery .gallery-bubble,
+.image-dialog .image-dialog-gallery .gallery-bubble.bubble-right{
+  align-items:center;justify-content:center;justify-items:center;
+}
+.image-dialog .gallery-bubble .bubble-label{
+  display:block;align-self:center;justify-self:center;width:100%;max-width:82%;
+  margin:0;padding:0;text-align:center;
+  font-size:clamp(14px,1.15vw,16px);font-weight:500;line-height:1.22;letter-spacing:-.025em;
+  color:rgba(238,249,248,.94);text-shadow:0 1px 4px #06151d66;
+  -webkit-font-smoothing:antialiased;
+}
+@media(max-width:700px){.image-dialog .gallery-bubble .bubble-label{font-size:12px;line-height:1.2;max-width:86%}}

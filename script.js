@@ -105,6 +105,11 @@ function showGalleryScreen(index){
   imageDialog.classList.add('is-loading');
   dialogImage.onload=dialogImage.onerror=()=>{
     if(request!==galleryRequest)return;
+    if(dialogImage.naturalWidth&&dialogImage.naturalHeight){
+      const visibleHeight=Math.min(dialogImage.naturalHeight,window.innerHeight*.9-95);
+      const fittedWidth=Math.min(1100,Math.max(280,Math.round(visibleHeight*dialogImage.naturalWidth/dialogImage.naturalHeight+44)));
+      imageDialog.style.setProperty('--viewer-width',`${fittedWidth}px`);
+    }
     window.setTimeout(()=>{if(request===galleryRequest)imageDialog.classList.remove('is-loading')},240);
   };
   dialogImage.src=screen.src;
@@ -124,7 +129,7 @@ function renderGalleryBubbles(){
     button.type='button';
     button.className=`gallery-bubble ${position%2?'bubble-right':'bubble-left'} bubble-enter`;
     button.style.setProperty('--bubble-order',String(position));
-    button.innerHTML=`<span class="bubble-orbit" aria-hidden="true">↗</span><span class="bubble-label"></span>`;
+    button.innerHTML='<span class="bubble-label"></span>';
     button.querySelector('.bubble-label').textContent=screen.label;
     button.setAttribute('aria-label',`Show ${activeProject} ${screen.label} screenshot`);
     button.addEventListener('click',()=>{
@@ -146,6 +151,7 @@ document.addEventListener('click',event=>{
   if(!link)return;
   event.preventDefault();
   imageOpener=link;
+  imageDialog.style.setProperty('--viewer-width','620px');
   activeProject=link.dataset.lightboxTitle||'Project screen';
   activeScreens=personalScreens[activeProject]||[{src:link.href,label:'Overview',alt:link.querySelector('img')?.alt}];
   imageDialog.classList.toggle('has-gallery',activeScreens.length>1);

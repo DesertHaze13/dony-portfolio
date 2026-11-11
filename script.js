@@ -121,6 +121,37 @@ function showGalleryScreen(index){
 let galleryRequest=0;
 let gallerySwitching=false;
 const reduceGalleryMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
+async function popBubble(button,event){
+  if(reduceGalleryMotion.matches)return;
+  const rect=button.getBoundingClientRect();
+  const x=event.detail?Math.max(0,Math.min(100,(event.clientX-rect.left)/rect.width*100)):50;
+  const y=event.detail?Math.max(0,Math.min(100,(event.clientY-rect.top)/rect.height*100)):50;
+  button.style.setProperty('--pop-x',`${x}%`);
+  button.style.setProperty('--pop-y',`${y}%`);
+  button.classList.add('is-popping');
+  // Film retracts in milliseconds; tiny rim droplets carry on with gravity.
+  const animations=[];
+  for(let i=0;i<22;i++){
+    const angle=i/22*Math.PI*2+(Math.random()-.5)*.16;
+    const radius=rect.width*.48;
+    const speed=12+Math.random()*23;
+    const drop=document.createElement('i');
+    drop.className='bubble-drop';
+    const size=.8+Math.random()*1.7;
+    drop.style.cssText=`left:${50+Math.cos(angle)*48}%;top:${50+Math.sin(angle)*48}%;width:${size}px;height:${size}px`;
+    button.append(drop);
+    const dx=Math.cos(angle)*speed,dy=Math.sin(angle)*speed;
+    const delay=Math.hypot(radius*Math.cos(angle)-(x/100-.5)*rect.width,radius*Math.sin(angle)-(y/100-.5)*rect.height)/rect.width*65;
+    const animation=drop.animate([
+      {transform:'translate(-50%,-50%)',opacity:0,offset:0},
+      {transform:'translate(-50%,-50%)',opacity:.8,offset:.06},
+      {transform:`translate(${dx*.65}px,${dy*.65+3}px)`,opacity:.5,offset:.65},
+      {transform:`translate(${dx}px,${dy+14}px) scale(.3)`,opacity:0}
+    ],{duration:180+Math.random()*90,delay,fill:'both',easing:'ease-out'});
+    animations.push(animation.finished.catch(()=>{}).finally(()=>drop.remove()));
+  }
+  await Promise.all(animations);
+}
 function renderGalleryBubbles(){
   dialogGallery.replaceChildren();
   const others=activeScreens.map((screen,index)=>({screen,index})).filter(item=>item.index!==activeScreen);
@@ -129,19 +160,20 @@ function renderGalleryBubbles(){
     button.type='button';
     button.className=`gallery-bubble ${position%2?'bubble-right':'bubble-left'} bubble-enter`;
     button.style.setProperty('--bubble-order',String(position));
-    button.innerHTML='<span class="bubble-body" aria-hidden="true"><span class="bubble-lens"></span><span class="bubble-film"></span><span class="bubble-shine"></span></span><span class="bubble-burst" aria-hidden="true"></span><span class="bubble-label"></span>';
+    button.innerHTML='<span class="bubble-body" aria-hidden="true"><span class="bubble-film"></span><span class="bubble-shine"></span></span><span class="bubble-label"></span>';
     button.querySelector('.bubble-label').textContent=screen.label;
-    button.style.setProperty('--bubble-img',`url("${encodeURI(screen.src)}")`);
+
     button.setAttribute('aria-label',`Show ${activeProject} ${screen.label} screenshot`);
-    button.addEventListener('click',()=>{
+    button.addEventListener('click',async event=>{
       if(gallerySwitching)return;
       gallerySwitching=true;
-      button.classList.add('is-popping');
-      window.setTimeout(()=>{
-        showGalleryScreen(index);
-        gallerySwitching=false;
-        dialogGallery.querySelector('button')?.focus({preventScroll:true});
-      },reduceGalleryMotion.matches?0:330);
+      const request=galleryRequest;
+      await popBubble(button,event);
+      // Closing the viewer or using arrow keys cancels a pending selection.
+      if(request!==galleryRequest||!imageDialog.open){gallerySwitching=false;return}
+      showGalleryScreen(index);
+      gallerySwitching=false;
+      dialogGallery.querySelector('button')?.focus({preventScroll:true});
     });
     dialogGallery.append(button);
   });

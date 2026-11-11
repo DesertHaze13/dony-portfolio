@@ -132,139 +132,67 @@ html[data-theme=dark]{color-scheme:dark;--paper:#101b1b;--surface:#1b2928;--ink:
 .image-dialog-close{right:calc(50% - var(--viewer-width,620px)/2 - 18px)}
 @media(max-width:700px){.image-dialog-close{right:calc(50% - 22px)}}
 @media(max-width:700px){.image-dialog-content,.image-dialog.is-loading .image-dialog-content{width:calc(100% - 24px);transition:none}}
-/* ------------------------------------------------------------------
-   Soap bubbles (inspired by Damian Patkowski's "Bubble animation").
-   Clear, almost invisible spheres: a thin rainbow rim, glossy
-   highlights, and an upside-down refraction of the screen they open.
-   button  → position, rise + slow drift, hover swell
-   .bubble-body → soft jelly wobble
-------------------------------------------------------------------- */
+/* Thin transparent film: light collects at the rim, not across a flat image. */
+@property --tear { syntax:'<length>'; inherits:false; initial-value:0px; }
 .image-dialog .image-dialog-gallery .gallery-bubble,
 .image-dialog .image-dialog-gallery .gallery-bubble.bubble-right{
-  --size:132px;
-  position:absolute;display:grid;place-items:center;
-  width:var(--size);height:var(--size);min-height:0;aspect-ratio:1;padding:0;
-  border:0;border-radius:50%;background:none;box-shadow:none;filter:none;
-  backdrop-filter:none;-webkit-backdrop-filter:none;
-  color:#fff;text-align:center;font:750 12px/1.2 Montserrat,sans-serif;letter-spacing:-.02em;
-  cursor:pointer;pointer-events:auto;scale:1;
-  transition:scale .5s cubic-bezier(.34,1.56,.64,1);
-  animation:soap-rise .9s cubic-bezier(.16,1,.3,1) both,soap-drift var(--drift,7s) ease-in-out infinite;
-  animation-delay:calc(var(--bubble-order)*.14s),calc(.9s + var(--bubble-order)*-2.3s);
+  --size:132px;position:absolute;display:grid;place-items:center;
+  width:var(--size);height:var(--size);min-height:0;padding:0;
+  border:0;border-radius:50%;background:transparent;box-shadow:none;
+  backdrop-filter:none;color:white;text-align:center;cursor:pointer;
+  pointer-events:auto;isolation:isolate;filter:none;
+  animation:film-arrive .55s ease-out both,film-drift var(--drift,7s) ease-in-out infinite;
+  animation-delay:0s,calc(var(--bubble-order)*-2.1s);
 }
 .image-dialog .image-dialog-gallery .gallery-bubble{left:calc(-1*var(--size) - 12px);top:24%}
-.image-dialog .image-dialog-gallery .gallery-bubble.bubble-right{--size:116px;--drift:8.5s;left:auto;right:calc(-1*var(--size) - 16px);top:50%}
-.image-dialog .image-dialog-gallery .gallery-bubble:nth-child(n+3){--size:98px;--drift:6.2s;top:66%}
-.image-dialog .image-dialog-gallery .gallery-bubble:hover{scale:1.07;filter:none}
-.image-dialog .image-dialog-gallery .gallery-bubble:focus-visible{outline:2px solid rgba(255,255,255,.85);outline-offset:6px}
-
-.bubble-body{position:absolute;inset:0;border-radius:50%;overflow:hidden;isolation:isolate;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.28),inset 0 0 22px rgba(255,255,255,.10),0 18px 40px rgba(0,0,0,.18);
-  backdrop-filter:blur(1.5px) brightness(1.12) saturate(1.25);-webkit-backdrop-filter:blur(1.5px) brightness(1.12) saturate(1.25);
-  animation:soap-wobble var(--wobble,3.8s) ease-in-out infinite;animation-delay:calc(var(--bubble-order)*-1.1s)}
-.gallery-bubble.bubble-right .bubble-body{--wobble:4.4s}
-
-/* What a real bubble does to the world behind it: flips it, squeezes it toward the rim. */
-.bubble-lens{position:absolute;inset:-6%;border-radius:50%;
-  background:var(--bubble-img) center/cover no-repeat;
-  transform:rotate(180deg) scale(1.08);
-  filter:blur(.7px) saturate(1.35) contrast(1.05);opacity:.5;
-  -webkit-mask:radial-gradient(circle,rgba(0,0,0,.18) 28%,rgba(0,0,0,.75) 62%,#000 72%,transparent 74%);
-  mask:radial-gradient(circle,rgba(0,0,0,.18) 28%,rgba(0,0,0,.75) 62%,#000 72%,transparent 74%)}
-
-/* Thin-film iridescence: a slowly turning rainbow, visible only near the rim. */
-.bubble-film,.bubble-film::before{position:absolute;inset:0;border-radius:50%;
-  background:conic-gradient(from 0deg,#ff8ad8,#ffd27a,#9dffb5,#76e3ff,#9b8cff,#ff8ad8);
-  mix-blend-mode:screen;animation:soap-swirl 9s linear infinite}
-.bubble-film{
-  -webkit-mask:radial-gradient(closest-side,transparent 82%,rgba(0,0,0,.55) 92%,#000 97%,transparent 100%);
-  mask:radial-gradient(closest-side,transparent 82%,rgba(0,0,0,.55) 92%,#000 97%,transparent 100%);opacity:.95}
-.bubble-film::before{content:"";animation-direction:reverse;animation-duration:13s;opacity:.32;
-  -webkit-mask:radial-gradient(closest-side,transparent 45%,#000 100%);mask:radial-gradient(closest-side,transparent 45%,#000 100%)}
-
-/* Glossy window reflections. */
-.bubble-shine{position:absolute;inset:0;border-radius:50%;pointer-events:none}
-.bubble-shine::before{content:"";position:absolute;top:9%;left:15%;width:44%;height:26%;border-radius:50%;
-  background:radial-gradient(ellipse at 50% 60%,rgba(255,255,255,.9),rgba(255,255,255,.18) 55%,transparent 72%);
-  transform:rotate(-38deg);filter:blur(1px)}
-.bubble-shine::after{content:"";position:absolute;right:16%;bottom:13%;width:18%;height:9%;border-radius:50%;
-  background:rgba(255,255,255,.55);transform:rotate(-38deg);filter:blur(2px)}
-
-.image-dialog .gallery-bubble .bubble-label{position:relative;z-index:2;max-width:72%;
-  font-size:12px;line-height:1.15;text-wrap:balance;color:#fff;
-  text-shadow:0 1px 2px rgba(0,0,0,.55),0 0 14px rgba(0,0,0,.55)}
-
-/* Small ambient bubbles, purely decorative. */
-.bubble-deco{--size:26px;position:absolute;width:var(--size);height:var(--size);pointer-events:none;
-  animation:soap-rise .9s cubic-bezier(.16,1,.3,1) both,soap-drift var(--drift,6s) ease-in-out infinite;
-  animation-delay:var(--d,.25s),calc(.9s + var(--d,.25s)*-6)}
-.bubble-deco .bubble-body{box-shadow:inset 0 0 0 1px rgba(255,255,255,.3);backdrop-filter:none;-webkit-backdrop-filter:none}
-.bubble-deco.d1{--size:34px;--drift:7.4s;--d:.3s;left:-58px;top:12%}
-.bubble-deco.d2{--size:18px;--drift:5.6s;--d:.45s;right:-44px;top:36%}
-.bubble-deco.d3{--size:24px;--drift:6.8s;--d:.6s;right:-150px;top:80%}
-
-/* Pop: the film flashes, the sphere bursts, droplets fly out. */
-.bubble-burst{position:absolute;inset:50%;width:6px;height:6px;margin:-3px;border-radius:50%;opacity:0;pointer-events:none;
-  --r:calc(var(--size)*.5);
-  box-shadow:
-    0 calc(-1*var(--r)) 0 rgba(255,255,255,.9),
-    calc(var(--r)*.71) calc(var(--r)*-.71) 0 -1px rgba(255,215,140,.9),
-    var(--r) 0 0 rgba(160,255,200,.85),
-    calc(var(--r)*.71) calc(var(--r)*.71) 0 -1px rgba(255,255,255,.9),
-    0 var(--r) 0 rgba(130,220,255,.9),
-    calc(var(--r)*-.71) calc(var(--r)*.71) 0 -1px rgba(255,140,220,.9),
-    calc(-1*var(--r)) 0 0 rgba(255,255,255,.9),
-    calc(var(--r)*-.71) calc(var(--r)*-.71) 0 -1px rgba(170,150,255,.9)}
-.image-dialog .image-dialog-gallery .gallery-bubble.is-popping{animation-play-state:paused!important;pointer-events:none;scale:1}
-.gallery-bubble.is-popping .bubble-body{animation:soap-pop .26s cubic-bezier(.3,0,.8,.4) forwards}
-.gallery-bubble.is-popping .bubble-label{animation:soap-fade .18s ease-out forwards}
-.gallery-bubble.is-popping .bubble-burst{animation:soap-burst .32s cubic-bezier(.1,.7,.3,1) forwards}
-
-@keyframes soap-rise{from{opacity:0;transform:translateY(90px) scale(.3)}60%{opacity:1}to{opacity:1;transform:translateY(0) scale(1)}}
-@keyframes soap-drift{0%,100%{transform:translate(0,0)}25%{transform:translate(5px,-9px)}50%{transform:translate(-3px,-16px)}75%{transform:translate(-6px,-6px)}}
-@keyframes soap-wobble{0%,100%{transform:scale(1,1)}25%{transform:scale(1.03,.975)}50%{transform:scale(.978,1.025)}75%{transform:scale(1.015,.988)}}
-@keyframes soap-swirl{to{transform:rotate(360deg)}}
-@keyframes soap-pop{0%{transform:scale(1);opacity:1;filter:brightness(1)}40%{transform:scale(1.12);opacity:1;filter:brightness(1.8)}100%{transform:scale(1.3);opacity:0;filter:brightness(2)}}
-@keyframes soap-fade{to{opacity:0;transform:scale(.85)}}
-@keyframes soap-burst{0%{opacity:1;transform:scale(.85)}100%{opacity:0;transform:scale(1.55)}}
-
+.image-dialog .image-dialog-gallery .gallery-bubble.bubble-right{--size:116px;--drift:8.7s;left:auto;right:calc(-1*var(--size) - 16px);top:50%}
+.image-dialog .image-dialog-gallery .gallery-bubble:nth-child(n+3){--size:98px;top:70%}
+.image-dialog .image-dialog-gallery .gallery-bubble:hover{filter:none}
+.image-dialog .image-dialog-gallery .gallery-bubble:focus-visible{outline:2px solid #d4efec;outline-offset:7px}
+.bubble-body{position:absolute;inset:0;border-radius:50%;overflow:hidden;pointer-events:none;
+  background:radial-gradient(circle at 38% 30%,transparent 55%,#c9faff08 79%,#edfaff23 97%,transparent);
+  box-shadow:inset 0 0 0 .6px #f6ffff80,inset 1px 1px 5px #e6ffff12,inset -2px -3px 5px #adcee821;
+  backdrop-filter:brightness(1.06) saturate(1.08);-webkit-backdrop-filter:brightness(1.06) saturate(1.08);
+  animation:film-breathe 5.8s ease-in-out infinite;animation-delay:calc(var(--bubble-order,0)*-1.7s)}
+.bubble-film{position:absolute;inset:0;border-radius:50%;opacity:.78;
+  background:conic-gradient(from 24deg,#b6eeff05 0deg,#78cfff82 48deg,#ecc2ff99 82deg,#ffc3bd22 120deg,#ffdfa77a 165deg,#e1a1e9aa 205deg,#9dd4ff55 245deg,#b2f3db11 282deg,#fff4d999 320deg,#b6eeff05);
+  -webkit-mask:radial-gradient(closest-side,transparent 87%,#0003 92%,#000 98%,transparent 100%);
+  mask:radial-gradient(closest-side,transparent 87%,#0003 92%,#000 98%,transparent 100%);
+  animation:film-flow 11s ease-in-out infinite alternate}
+.bubble-film::after{content:'';position:absolute;inset:5%;border:1px solid #ecdeff66;border-radius:50%;transform:scaleX(.96)}
+.bubble-shine{position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(ellipse 16% 6% at 28% 17%,#fff9,transparent),radial-gradient(ellipse 9% 4% at 70% 86%,#e9faff80,transparent)}
+.bubble-shine::before{content:'';position:absolute;inset:6%;border-radius:50%;border:2px solid transparent;border-top-color:#fff9;border-left-color:#fff4;transform:rotate(-28deg);clip-path:polygon(0 0,68% 0,28% 50%,0 65%)}
+.bubble-shine::after{content:'';position:absolute;inset:9%;border-radius:50%;border:1px solid transparent;border-bottom-color:#f3ddffb3;transform:rotate(-22deg);clip-path:polygon(35% 70%,100% 60%,100% 100%,30% 100%)}
+.image-dialog .gallery-bubble .bubble-label{position:relative;align-self:center;max-width:75%;padding:0;
+  font:600 11px/1.3 Montserrat,sans-serif;letter-spacing:0;color:#fff;text-align:center;
+  text-wrap:balance;text-shadow:0 1px 5px #000,0 0 12px #0008;pointer-events:none}
+.bubble-deco{position:absolute;width:var(--size);height:var(--size);pointer-events:none;animation:film-drift 8s ease-in-out infinite}
+.bubble-deco.d1{--size:28px;left:-58px;top:12%}
+.bubble-deco.d2{--size:16px;right:-44px;top:36%;animation-delay:-3s}
+.bubble-deco.d3{--size:22px;right:-150px;top:80%;animation-delay:-5s}
+.bubble-deco .bubble-body{backdrop-filter:none;-webkit-backdrop-filter:none}
+.image-dialog .image-dialog-gallery .gallery-bubble.is-popping{pointer-events:none;animation-play-state:paused}
+.gallery-bubble.is-popping .bubble-body{animation:film-tear 110ms linear both;
+  -webkit-mask:radial-gradient(circle at var(--pop-x) var(--pop-y),transparent var(--tear),#000 calc(var(--tear) + 1px));
+  mask:radial-gradient(circle at var(--pop-x) var(--pop-y),transparent var(--tear),#000 calc(var(--tear) + 1px))}
+.gallery-bubble.is-popping .bubble-label{animation:film-label-out 65ms ease-out both}
+.bubble-drop{position:absolute;border-radius:50%;background:#e6faff;box-shadow:0 0 2px #d6c3ff77;pointer-events:none}
+@keyframes film-arrive{from{opacity:0;translate:0 12px}to{opacity:1;translate:0 0}}
+@keyframes film-drift{0%,100%{transform:translate(0,0) rotate(-2deg)}33%{transform:translate(5px,-11px) rotate(1deg)}68%{transform:translate(-4px,-5px) rotate(2deg)}}
+@keyframes film-breathe{0%,100%{transform:scale(1,.995)}48%{transform:scale(.985,1.012)}72%{transform:scale(1.008,.99)}}
+@keyframes film-flow{from{transform:rotate(-12deg) scale(1);filter:hue-rotate(-12deg)}to{transform:rotate(24deg) scale(1.015);filter:hue-rotate(20deg)}}
+@keyframes film-tear{from{--tear:0px}to{--tear:190px}}
+@keyframes film-label-out{to{opacity:0}}
 @media(max-width:700px){
+  .image-dialog-content,.image-dialog.is-loading .image-dialog-content{margin-top:122px}
   .image-dialog .image-dialog-gallery .gallery-bubble,
-  .image-dialog .image-dialog-gallery .gallery-bubble.bubble-right{--size:92px;top:-100px}
-  .image-dialog .image-dialog-gallery .gallery-bubble{left:6px}
-  .image-dialog .image-dialog-gallery .gallery-bubble.bubble-right{left:auto;right:6px;top:-90px}
-  .image-dialog .image-dialog-gallery .gallery-bubble:nth-child(n+3){--size:78px;left:104px;top:-84px}
+  .image-dialog .image-dialog-gallery .gallery-bubble.bubble-right{--size:88px;top:-104px;left:6px;right:auto}
+  .image-dialog .image-dialog-gallery .gallery-bubble.bubble-right{top:-98px;left:auto;right:6px}
+  .image-dialog .image-dialog-gallery .gallery-bubble:nth-child(n+3){--size:78px;left:104px;right:auto;top:-90px}
   .image-dialog .gallery-bubble .bubble-label{font-size:10px}
   .bubble-deco{display:none}
 }
 @media(prefers-reduced-motion:reduce){
-  .image-dialog .image-dialog-gallery .gallery-bubble,.bubble-deco,.bubble-body,.bubble-film,.bubble-film::before{animation:none!important}
-  .gallery-bubble.is-popping .bubble-body{animation:none;opacity:0}
-}
-/* Real soap-bubble texture (transparent PNG → webp). Overrides the CSS-drawn rim/shine above. */
-.bubble-body{box-shadow:0 18px 40px rgba(0,0,0,.14)}
-.bubble-film{-webkit-mask:none;mask:none;opacity:1;mix-blend-mode:normal;
-  background:url('assets/images/soap-bubble.webp') center/100% 100% no-repeat;
-  animation:soap-shimmer 6s ease-in-out infinite}
-.bubble-film::before,.bubble-shine{display:none}
-.bubble-lens{opacity:.3}
-.bubble-deco .bubble-body{box-shadow:none}
-@keyframes soap-shimmer{0%,100%{filter:hue-rotate(0deg) saturate(1)}50%{filter:hue-rotate(28deg) saturate(1.25)}}
-@media(prefers-reduced-motion:reduce){.bubble-film{animation:none!important}}
-/* Clear liquid glass: no milky fill, only a light blur of what sits behind. */
-.bubble-body{background:none;backdrop-filter:blur(1.5px) saturate(1.3);-webkit-backdrop-filter:blur(1.5px) saturate(1.3);box-shadow:none}
-.bubble-lens{display:none}
-/* Tidy label: a small glass pill in the centre of the bubble. */
-.image-dialog .gallery-bubble .bubble-label{align-self:center;justify-self:center;max-width:78%;
-  padding:5px 10px;border-radius:999px;
-  background:rgba(8,20,20,.42);border:1px solid rgba(255,255,255,.18);
-  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-  font:600 11px/1.25 Montserrat,sans-serif;letter-spacing:.01em;color:#fff;text-shadow:none;
-  text-align:center;text-wrap:balance;-webkit-font-smoothing:antialiased}
-@media(max-width:700px){
-  .image-dialog-content,.image-dialog.is-loading .image-dialog-content{margin-top:122px}
-  .image-dialog .image-dialog-gallery .gallery-bubble,
-  .image-dialog .image-dialog-gallery .gallery-bubble.bubble-right{--size:88px;top:-104px}
-  .image-dialog .image-dialog-gallery .gallery-bubble.bubble-right{top:-98px}
-  .image-dialog .gallery-bubble .bubble-label{font-size:10px;padding:4px 8px}
+  .image-dialog .image-dialog-gallery .gallery-bubble,.bubble-deco,.bubble-body,.bubble-film{animation:none!important}
 }

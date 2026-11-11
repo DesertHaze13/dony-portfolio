@@ -101,17 +101,46 @@ personalScreens['Run Detective']=[
 function showGalleryScreen(index){
   activeScreen=(index+activeScreens.length)%activeScreens.length;
   const screen=activeScreens[activeScreen];
+  const request=++galleryRequest;
   imageDialog.classList.add('is-loading');
+  dialogImage.onload=dialogImage.onerror=()=>{
+    if(request!==galleryRequest)return;
+    window.setTimeout(()=>{if(request===galleryRequest)imageDialog.classList.remove('is-loading')},240);
+  };
   dialogImage.src=screen.src;
   dialogImage.alt=screen.alt||`${activeProject} ${screen.label} screenshot`;
   dialogCaption.textContent=`${activeProject} · ${screen.label}`;
-  dialogGallery.querySelectorAll('button').forEach((button,i)=>{
-    button.setAttribute('aria-current',i===activeScreen?'true':'false');
-  });
-  if(dialogImage.complete)imageDialog.classList.remove('is-loading');
+  renderGalleryBubbles();
+  if(dialogImage.complete&&dialogImage.naturalWidth)dialogImage.onload();
 }
-dialogImage.addEventListener('load',()=>imageDialog.classList.remove('is-loading'));
-dialogImage.addEventListener('error',()=>imageDialog.classList.remove('is-loading'));
+let galleryRequest=0;
+let gallerySwitching=false;
+const reduceGalleryMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
+function renderGalleryBubbles(){
+  dialogGallery.replaceChildren();
+  const others=activeScreens.map((screen,index)=>({screen,index})).filter(item=>item.index!==activeScreen);
+  others.forEach(({screen,index},position)=>{
+    const button=document.createElement('button');
+    button.type='button';
+    button.className=`gallery-bubble ${position%2?'bubble-right':'bubble-left'} bubble-enter`;
+    button.style.setProperty('--bubble-order',String(position));
+    button.innerHTML=`<span class="bubble-orbit" aria-hidden="true">↗</span><span class="bubble-label"></span>`;
+    button.querySelector('.bubble-label').textContent=screen.label;
+    button.setAttribute('aria-label',`Show ${activeProject} ${screen.label} screenshot`);
+    button.addEventListener('click',()=>{
+      if(gallerySwitching)return;
+      gallerySwitching=true;
+      button.classList.add('is-popping');
+      window.setTimeout(()=>{
+        showGalleryScreen(index);
+        gallerySwitching=false;
+        dialogGallery.querySelector('button')?.focus({preventScroll:true});
+      },reduceGalleryMotion.matches?0:330);
+    });
+    dialogGallery.append(button);
+  });
+  dialogGallery.hidden=others.length===0;
+}
 document.addEventListener('click',event=>{
   const link=event.target.closest('a[data-lightbox]');
   if(!link)return;
@@ -119,16 +148,6 @@ document.addEventListener('click',event=>{
   imageOpener=link;
   activeProject=link.dataset.lightboxTitle||'Project screen';
   activeScreens=personalScreens[activeProject]||[{src:link.href,label:'Overview',alt:link.querySelector('img')?.alt}];
-  dialogGallery.replaceChildren();
-  activeScreens.forEach((screen,index)=>{
-    const button=document.createElement('button');
-    button.type='button';
-    button.textContent=screen.label;
-    button.setAttribute('aria-label',`Show ${activeProject} ${screen.label} screenshot`);
-    button.addEventListener('click',()=>showGalleryScreen(index));
-    dialogGallery.append(button);
-  });
-  dialogGallery.hidden=activeScreens.length<2;
   imageDialog.classList.toggle('has-gallery',activeScreens.length>1);
   showGalleryScreen(0);
   imageDialog.showModal();
@@ -140,4 +159,4 @@ imageDialog.addEventListener('keydown',event=>{
   if(event.key==='ArrowRight'){event.preventDefault();showGalleryScreen(activeScreen+1)}
   if(event.key==='ArrowLeft'){event.preventDefault();showGalleryScreen(activeScreen-1)}
 });
-imageDialog.addEventListener('close',()=>{dialogImage.removeAttribute('src');imageOpener?.focus()});
+imageDialog.addEventListener('close',()=>{galleryRequest++;gallerySwitching=false;dialogImage.removeAttribute('src');imageOpener?.focus()});

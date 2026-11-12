@@ -195,16 +195,41 @@ function positionAnnotations(){
   if(window.innerWidth<=700||imageDialog.classList.contains('is-loading'))return;
   dialogConnectors.setAttribute('viewBox',`0 0 ${viewer.width} ${viewer.height}`);
   const cards=[...dialogNotes.children],spots=[...dialogAnnotations.children];
-  const counts=[Math.ceil(cards.length/2),Math.floor(cards.length/2)],used=[0,0];
+  const rightSides=spots.map(spot=>{const rect=spot.getBoundingClientRect();return rect.left+rect.width/2>image.left+image.width/2});
   cards.forEach((card,index)=>{
     if(!floating){card.classList.remove('note-right');card.style.top='';return}
-    const side=index%2,slot=used[side]++;
-    card.classList.toggle('note-right',side===1);
-    card.style.top=`${Math.round(viewer.height*(counts[side]===1?.48:.22+slot*.48))}px`;
+    card.classList.toggle('note-right',rightSides[index]);
   });
+  if(floating){
+    for(const right of [false,true]){
+      const group=cards.map((card,index)=>({card,index,rect:spots[index]?.getBoundingClientRect()}))
+        .filter(item=>rightSides[item.index]===right&&item.rect)
+        .sort((a,b)=>a.rect.top-b.rect.top);
+      let bottom=14;
+      for(const item of group){
+        const height=item.card.getBoundingClientRect().height;
+        const desired=item.rect.top+item.rect.height/2-viewer.top-height/2;
+        let top=Math.max(bottom,Math.min(desired,viewer.height-height-14));
+        const cardRect=item.card.getBoundingClientRect();
+        for(const bubble of imageDialog.querySelectorAll('.gallery-bubble')){
+          const bubbleRect=bubble.getBoundingClientRect();
+          if(cardRect.left<bubbleRect.right&&cardRect.right>bubbleRect.left&&
+             viewer.top+top<bubbleRect.bottom+12&&viewer.top+top+height>bubbleRect.top-12){
+            top=Math.max(top,bubbleRect.bottom-viewer.top+16);
+          }
+        }
+        item.card.style.top=`${top+height/2}px`;
+        bottom=top+height+14;
+      }
+      const overflow=bottom-14-(viewer.height-14);
+      if(overflow>0)for(const item of group){
+        item.card.style.top=`${parseFloat(item.card.style.top)-overflow}px`;
+      }
+    }
+  }
   cards.forEach((card,index)=>{
     const spot=spots[index];if(!spot)return;
-    const a=spot.getBoundingClientRect(),b=card.getBoundingClientRect(),right=index%2===1;
+    const a=spot.getBoundingClientRect(),b=card.getBoundingClientRect(),right=rightSides[index];
     const x1=a.left+a.width/2-viewer.left,y1=a.top+a.height/2-viewer.top;
     const x2=(floating?(right?b.left:b.right):b.left+b.width/2)-viewer.left;
     const y2=(floating?b.top+b.height/2:b.top)-viewer.top;

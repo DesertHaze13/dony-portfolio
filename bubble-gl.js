@@ -8,8 +8,8 @@ window.BubbleGlass=(()=>{
       if(r>1.)discard;
       float z=sqrt(max(0.,1.-r*r));vec3 n=normalize(vec3(p,z));
       // Wavelength-dependent interference changes with film thickness and view angle.
-      float a=atan(p.y,p.x);
-      float thickness=410.+85.*sin(a*2.3+time*.38)+38.*sin(a*5.-time*.23)+60.*p.y;
+      // Smooth Cartesian waves avoid the -PI/PI seam of angle-based patterns.
+      float thickness=410.+85.*sin(p.x*2.3+time*.38)*cos(p.y*1.7-time*.16)+38.*sin(p.x*4.2+p.y*2.8-time*.23)+60.*p.y;
       vec3 phase=12.56637*1.33*thickness*max(.18,z)/vec3(650.,510.,440.);
       vec3 spectrum=pow(.5+.5*cos(phase),vec3(1.6));
       float fresnel=pow(1.-z,2.1);

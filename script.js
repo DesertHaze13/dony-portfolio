@@ -161,6 +161,7 @@ function renderGalleryBubbles(animateEntry=false){
     button.type='button';
     button.className=`gallery-bubble ${position%2?'bubble-right':'bubble-left'}${animateEntry?' bubble-enter':''}`;
     button.style.setProperty('--bubble-order',String(position));
+    button.style.setProperty('--bubble-scene',`url("${activeScreens[activeScreen].src}")`);
     button.innerHTML='<span class="bubble-body" aria-hidden="true"><span class="bubble-film"></span><span class="bubble-shine"></span></span><span class="bubble-label"></span>';
     button.querySelector('.bubble-label').textContent=screen.label;
 
@@ -177,7 +178,7 @@ function renderGalleryBubbles(animateEntry=false){
       dialogGallery.querySelector('button')?.focus({preventScroll:true});
     });
     dialogGallery.append(button);
-    window.BubbleGlass?.mount(button,position*3.7);
+    window.BubbleGlass?.mount(button,position*3.7,activeScreens[activeScreen].src);
   });
   if(others.length)['d1','d2','d3'].forEach(name=>{
     const deco=document.createElement('span');

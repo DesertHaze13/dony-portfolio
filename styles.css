@@ -247,7 +247,7 @@ html[data-theme=dark]{color-scheme:dark;--paper:#101b1b;--surface:#1b2928;--ink:
 .annotation-spot{position:absolute;width:16px;height:16px;transform:translate(-50%,-50%);border:2px solid #fff;border-radius:50%;background:#b6f35b;box-shadow:0 0 0 3px #17312b,0 5px 13px #0008}
 .annotation-index{position:absolute;right:22px;bottom:23px;min-width:29px;padding:5px 6px;border-radius:6px;background:#17312b;color:#fff;text-align:center;font:800 10px/1 Montserrat,sans-serif;box-shadow:0 4px 12px #0006}
 .annotation-arrow{position:absolute;right:8px;bottom:7px;color:#b6f35b;font:700 24px/1 Montserrat,sans-serif;text-shadow:0 1px 4px #000}
-.image-dialog-notes{display:grid;width:100%;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;border-top:1px solid var(--line);background:var(--line)}
+.image-dialog-notes{display:grid;width:100%;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;border-top:1px solid var(--line);background:var(--line)}
 .image-dialog-notes[hidden]{display:none}
 .image-note{min-width:0;padding:15px 17px 18px;background:var(--surface)}
 .image-note-number{display:block;margin-bottom:7px;color:#477b49;font:800 10px/1 Montserrat,sans-serif;letter-spacing:.08em}

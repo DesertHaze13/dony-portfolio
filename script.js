@@ -104,23 +104,28 @@ personalScreens['Run Detective']=[
 const screenHighlights={
   'current-demo.png':[
     {x:72,y:23,title:'Cash, clearly defined',why:'The balance separates money owned from credit, so the headline stays honest.'},
-    {x:28,y:60,title:'Monthly flow',why:'Income, purchases, and bills sit together; transfers are called out separately.'}
+    {x:28,y:60,title:'Monthly flow',why:'Income, purchases, and bills sit together; transfers are called out separately.'},
+    {x:74,y:57,title:'A reason to explore',why:'The leading spending category opens a path from summary to individual purchases.'}
   ],
   'current-spending.png':[
     {x:53,y:39,title:'Review before applying',why:'On-device AI proposes cleaner transaction details with an undo path.'},
-    {x:51,y:91,title:'Explore each slice',why:'A category ring invites a closer look at the purchases behind a total.'}
+    {x:51,y:91,title:'Explore each slice',why:'A category ring invites a closer look at the purchases behind a total.'},
+    {x:49,y:57,title:'Month by month',why:'The period control keeps category review grounded in a specific month.'}
   ],
   'current-shortcuts.png':[
     {x:47,y:26,title:'User-chosen alerts',why:'An iOS Shortcuts trigger watches only the selected apps.'},
-    {x:47,y:55,title:'Structured handoff',why:'The shortcut passes notification text into Current for transaction review.'}
+    {x:47,y:55,title:'Structured handoff',why:'The shortcut passes notification text into Current for transaction review.'},
+    {x:50,y:65,title:'No interruption',why:'The disabled Show When Run switch keeps the configured handoff unobtrusive.'}
   ],
   'plate-screen.png':[
     {x:58,y:54,title:'Look back by day',why:'The date rail makes earlier meals and goals easy to revisit.'},
-    {x:52,y:84,title:'Energy at a glance',why:'The daily ring turns nutrition progress into an immediate visual cue.'}
+    {x:52,y:84,title:'Energy at a glance',why:'The daily ring turns nutrition progress into an immediate visual cue.'},
+    {x:50,y:94,title:'One-tap paths',why:'History, progress, and meal capture stay close in the bottom navigation.'}
   ],
   'plate-log-meal.jpg':[
     {x:52,y:67,title:'Describe a meal',why:'A familiar dish can start with plain language instead of a long form.'},
-    {x:52,y:80,title:'Capture it your way',why:'Camera and photo import give people more than one path to log food.'}
+    {x:52,y:80,title:'Capture it your way',why:'Camera and photo import give people more than one path to log food.'},
+    {x:53,y:58,title:'Review first',why:'The screen makes clear that each detected item is checked before it is logged.'}
   ],
   'bioenial-home.png':[
     {x:74,y:55,title:'Learning preview',why:'The public page shows a sample activity and visible progress before sign-in.'},
@@ -132,39 +137,48 @@ const screenHighlights={
   ],
   'dony-lifts-screen.png':[
     {x:78,y:25,title:'Sets logged',why:'A workout card makes completion visible while training is in progress.'},
-    {x:48,y:55,title:'The whole week',why:'Daily status and a weekly summary make consistency easy to scan.'}
+    {x:48,y:55,title:'The whole week',why:'Daily status and a weekly summary make consistency easy to scan.'},
+    {x:48,y:76,title:'Plan ahead',why:'A future-week action lets the current day inform upcoming training plans.'}
   ],
   'dony-lifts-workout-detail.png':[
     {x:50,y:47,title:'Every set counts',why:'Load, reps, and completion live together for fast logging mid-workout.'},
-    {x:49,y:63,title:'Plans stay flexible',why:'An extra set can be added without leaving the exercise.'}
+    {x:49,y:63,title:'Plans stay flexible',why:'An extra set can be added without leaving the exercise.'},
+    {x:78,y:26,title:'Last load in view',why:'The previous weight is visible beside the exercise when choosing today’s load.'}
   ],
   'dony-lifts-sync-demo.png':[
     {x:49,y:24,title:'Shared workout data',why:'The demo screen shows the signed-in state for cross-device records.'},
-    {x:46,y:40,title:'A local way out',why:'Import and backup controls keep a portable copy within reach.'}
+    {x:46,y:40,title:'A local way out',why:'Import and backup controls keep a portable copy within reach.'},
+    {x:49,y:47,title:'Health stays private',why:'The screen states that Apple Health measurements remain on this device.'}
   ],
   'run-detective-screen.png':[
     {x:29,y:24,title:'Health synced',why:'The visible sync state tells runners when the app last received workout data.'},
-    {x:44,y:55,title:'The latest case',why:'Distance, pace, and heart rate turn one run into a useful starting point.'}
+    {x:44,y:55,title:'The latest case',why:'Distance, pace, and heart rate turn one run into a useful starting point.'},
+    {x:50,y:72,title:'Honest pace context',why:'The note explains when workout pace may include pauses.'}
   ],
   'run-detective-trends.png':[
     {x:48,y:31,title:'Change the window',why:'Time ranges let runners inspect short and long patterns.'},
-    {x:52,y:57,title:'Weekly evidence',why:'Interactive charts show the exact week behind a distance trend.'}
+    {x:52,y:57,title:'Weekly evidence',why:'Interactive charts show the exact week behind a distance trend.'},
+    {x:74,y:89,title:'More than distance',why:'Pace and heart-rate panels add context to the distance chart.'}
   ],
   'wings-for-life.png':[
     {x:52,y:36,title:'Across time zones',why:'Regional panels organize a worldwide event into readable local views.'},
-    {x:84,y:34,title:'Live from the course',why:'Video feeds bring activity from multiple locations into one screen.'}
+    {x:84,y:34,title:'Live from the course',why:'Video feeds bring activity from multiple locations into one screen.'},
+    {x:51,y:72,title:'One control room',why:'The multi-screen layout keeps regional views and live coverage together.'}
   ],
   'rabobank-it.png':[
     {x:24,y:18,title:'Mission stakes',why:'Requirements and rewards make the next decision immediately clear.'},
-    {x:52,y:62,title:'Choose a dock',why:'A spatial mission board turns progress into a place to explore.'}
+    {x:52,y:62,title:'Choose a dock',why:'A spatial mission board turns progress into a place to explore.'},
+    {x:79,y:19,title:'Story before action',why:'The mission brief gives each task a reason within the game world.'}
   ],
   'nn-sustainability.png':[
     {x:46,y:43,title:'A visible journey',why:'Illustrated milestones make learning progress feel tangible.'},
-    {x:5,y:62,title:'Character paths',why:'Profiles at the side suggest different ways through the experience.'}
+    {x:5,y:62,title:'Character paths',why:'Profiles at the side suggest different ways through the experience.'},
+    {x:45,y:90,title:'Progress on a timeline',why:'The bottom track makes completed and upcoming steps visible.'}
   ],
   'arbo-techniek.png':[
     {x:46,y:24,title:'Find a safety topic',why:'Large illustrated rows make specialist subjects easier to recognize.'},
-    {x:43,y:87,title:'Certificate actions',why:'The main actions put certificates and account connection within reach.'}
+    {x:43,y:87,title:'Certificate actions',why:'The main actions put certificates and account connection within reach.'},
+    {x:86,y:78,title:'Help close by',why:'FAQ and support controls remain available beside the learning path.'}
   ]
 };
 function positionAnnotations(){

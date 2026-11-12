@@ -28,28 +28,6 @@ window.BubbleGlass=(()=>{
       alpha*=1.-smoothstep(.991,1.,r);
       gl_FragColor=vec4(color,clamp(alpha,0.,.92));
     }`;
-  // A radial displacement field refracts the live DOM backdrop in Chromium.
-  // Other engines keep CSS glass rather than risking an opaque SVG backdrop.
-  let refractionReady=false;
-  function prepareRefraction(){
-    if(refractionReady)return true;
-    if(!/Chrome|Chromium|Edg\//.test(navigator.userAgent))return false;
-    const map=document.createElement('canvas');map.width=map.height=128;
-    const ctx=map.getContext('2d');if(!ctx)return false;
-    const pixels=ctx.createImageData(128,128);
-    for(let y=0;y<128;y++)for(let x=0;x<128;x++){
-      const nx=(x-63.5)/64,ny=(y-63.5)/64,r=Math.hypot(nx,ny);
-      const strength=r<1?Math.pow(r,4)*Math.sqrt(Math.max(0,1-r*r))*2.5:0;
-      const i=(y*128+x)*4;
-      pixels.data[i]=128+nx*strength*120;pixels.data[i+1]=128+ny*strength*120;
-      pixels.data[i+2]=128;pixels.data[i+3]=255;
-    }
-    ctx.putImageData(pixels,0,0);
-    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-    svg.setAttribute('width','0');svg.setAttribute('height','0');svg.setAttribute('aria-hidden','true');svg.style.position='absolute';
-    svg.innerHTML=`<defs><filter id="bubble-refraction" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB"><feImage href="${map.toDataURL()}" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="lens"/><feDisplacementMap in="SourceGraphic" in2="lens" scale="24" xChannelSelector="R" yChannelSelector="G"/><feGaussianBlur stdDeviation="0.25"/></filter></defs>`;
-    document.getElementById('image-dialog').append(svg);refractionReady=true;return true;
-  }
   let items=[],frame=0,last=0;
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
   function draw(t){
@@ -85,7 +63,6 @@ window.BubbleGlass=(()=>{
   }
   function mount(button,phase){
     const body=button.querySelector('.bubble-body');
-    if(prepareRefraction())body.classList.add('has-refraction');
     const canvas=document.createElement('canvas');canvas.className='bubble-optics';canvas.setAttribute('aria-hidden','true');
     const gl=canvas.getContext('webgl',{alpha:true,premultipliedAlpha:false,antialias:true,depth:false});
     if(!gl)return;

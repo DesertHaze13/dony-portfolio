@@ -12,9 +12,10 @@ window.BubbleGlass=(()=>{
       float thickness=410.+72.*sin(p.x*2.1+time*.47)*cos(p.y*1.8-time*.21)
         +34.*sin(p.x*4.4+p.y*2.6-time*.31)+29.*sin(p.y*3.1-time*.17)+58.*p.y;
       vec3 phase=12.56637*1.33*thickness*max(.18,z)/vec3(650.,510.,440.);
-      vec3 spectrum=pow(.5+.5*cos(phase),vec3(1.6));
-      float fresnel=pow(1.-z,2.1);
-      float band=smoothstep(.62,.97,r);
+      vec3 spectrum=pow(.5+.5*cos(phase),vec3(1.25));
+      float fresnel=pow(1.-z,1.65);
+      // The lower film gathers a wider rainbow as liquid drains downward.
+      float band=smoothstep(.58+.10*p.y,.87,r);
       float edge=exp(-pow((r-.982)/.011,2.));
       vec3 l=normalize(vec3(-.48+light.x*.95,.55+light.y*.95,1.05));
       float spec=pow(max(0.,dot(n,normalize(l+vec3(0.,0.,1.)))),65.);
@@ -23,8 +24,8 @@ window.BubbleGlass=(()=>{
       // Long curved studio reflections stay in world space as the film flows.
       float arc=exp(-pow((r-.88)/.018,2.))*pow(max(0.,dot(normalize(p),normalize(vec2(-.6,.8)))),9.);
       float lower=exp(-pow((r-.91)/.012,2.))*pow(max(0.,dot(normalize(p),normalize(vec2(.6,-.8)))),16.);
-      float alpha=band*(.14+fresnel*.50)+edge*.65+spec*.78+softSpec*.26+arc*.65+lower*.50;
-      vec3 color=mix(spectrum*1.2,vec3(.88,.97,1.),clamp(edge*.65+spec+softSpec*.65+arc+lower,0.,1.));
+      float alpha=band*(.24+fresnel*.55)+edge*.55+spec*.78+softSpec*.26+arc*.65+lower*.50;
+      vec3 color=mix(spectrum*1.5,vec3(.88,.97,1.),clamp(edge*.55+spec+softSpec*.65+arc+lower,0.,1.));
       alpha*=1.-smoothstep(.991,1.,r);
       gl_FragColor=vec4(color,clamp(alpha,0.,.92));
     }`;

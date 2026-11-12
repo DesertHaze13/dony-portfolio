@@ -208,8 +208,8 @@ html[data-theme=dark]{color-scheme:dark;--paper:#101b1b;--surface:#1b2928;--ink:
 .has-optics .bubble-film,.has-optics .bubble-shine{display:none}
 /* Saturated thin-film fallback if WebGL is unavailable or its context is lost. */
 .bubble-film{opacity:.95;background:conic-gradient(from 24deg,#6ce7ff80,#9d8cff,#ff9cdd,#ffcf72,#9affca,#70ceff,#e8a4ff,#ffb199,#6ce7ff80);
-  -webkit-mask:radial-gradient(closest-side,transparent 74%,#0002 83%,#000a 94%,#000 98%,transparent 100%);
-  mask:radial-gradient(closest-side,transparent 74%,#0002 83%,#000a 94%,#000 98%,transparent 100%)}
+  -webkit-mask:radial-gradient(closest-side,transparent 58%,#0002 68%,#000a 88%,#000 97%,transparent 100%);
+  mask:radial-gradient(closest-side,transparent 58%,#0002 68%,#000a 88%,#000 97%,transparent 100%)}
 .image-dialog .gallery-bubble .bubble-label{z-index:1}
 /* Labels sit on the optical centre, with softer contrast against the film. */
 .image-dialog .image-dialog-gallery .gallery-bubble,

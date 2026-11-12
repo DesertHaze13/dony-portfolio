@@ -387,13 +387,6 @@ function renderGalleryBubbles(animateEntry=false){
     dialogGallery.append(button);
     window.BubbleGlass?.mount(button,position*3.7);
   });
-  if(others.length)['d1','d2','d3'].forEach(name=>{
-    const deco=document.createElement('span');
-    deco.className=`bubble-deco ${name}`;
-    deco.setAttribute('aria-hidden','true');
-    deco.innerHTML='<span class="bubble-body"><span class="bubble-film"></span><span class="bubble-shine"></span></span>';
-    dialogGallery.append(deco);
-  });
   dialogGallery.hidden=others.length===0;
 }
 document.addEventListener('click',event=>{

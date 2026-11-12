@@ -267,12 +267,21 @@ html[data-theme=dark]{color-scheme:dark;--paper:#101b1b;--surface:#1b2928;--ink:
 .image-dialog-notes{width:min(calc(100% - 292px),var(--viewer-width,620px));margin:10px auto 0;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 16px 40px #0003}
 .annotation-connectors{display:none;position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:4;color:#b8f474}
 .annotation-paths path{fill:none;stroke:#b8f474;stroke-width:1.8;stroke-linecap:round;filter:drop-shadow(0 1px 2px #061b19)}
+.annotation-paths path.is-active{stroke:#e2ff9e;stroke-width:3;filter:drop-shadow(0 0 6px #b8f474);animation:annotation-glow 1.4s ease-in-out infinite alternate}
+.annotation-spot{transition:transform .28s ease,box-shadow .28s ease}
+.annotation-spot.is-active{transform:translate(-50%,-50%) scale(1.32);box-shadow:0 0 0 5px #17312b,0 0 0 11px #b8f47445,0 0 24px #caff7d}
+.annotation-spot.is-active::after{content:"";position:absolute;inset:-8px;border:1px solid #d9ff8f;border-radius:50%;animation:annotation-pulse 1.5s ease-out infinite}
+@keyframes annotation-glow{to{filter:drop-shadow(0 0 11px #d6ff9c)}}
+@keyframes annotation-pulse{to{opacity:0;transform:scale(1.8)}}
 @media(min-width:701px){
   .image-dialog.is-portrait .image-dialog-content{display:flex;flex-direction:column;align-items:center}
   .image-dialog.is-portrait .image-dialog-stage,.image-dialog.is-portrait .image-dialog-content>p{display:block;width:100%}
   .image-dialog.is-portrait .image-dialog-stage>img{max-height:calc(90dvh - 100px)}
   .image-dialog.floating-notes .image-dialog-notes{position:absolute;inset:0;display:block;width:100%;height:100%;margin:0;border:0;overflow:visible;background:none;box-shadow:none;pointer-events:none;z-index:5}
   .image-dialog.floating-notes .image-note{position:absolute;left:calc((100% - var(--viewer-width,620px))/2 - 226px);width:210px;max-width:calc((100% - var(--viewer-width,620px))/2 - 24px);padding:17px 18px;border:1px solid #d5ddd1;border-radius:15px;background:var(--surface);box-shadow:0 15px 38px #0005;transform:translateY(-50%)}
+  .image-dialog.floating-notes .image-note{pointer-events:auto;transition:border-color .3s ease,box-shadow .3s ease,background-color .3s ease}
+  .image-dialog.floating-notes .image-note.is-active{border-color:#a7df67;background-color:color-mix(in srgb,var(--surface) 82%,#b8f474);box-shadow:0 17px 42px #0006,0 0 0 3px #b8f47455}
+  .image-dialog.floating-notes .image-note:focus-visible{outline:2px solid #b8f474;outline-offset:4px}
   .image-dialog.floating-notes .image-note.note-right{left:auto;right:calc((100% - var(--viewer-width,620px))/2 - 226px)}
   .image-dialog.floating-notes .annotation-arrow{display:none}
   .image-dialog.floating-notes .bubble-deco{display:none}
@@ -287,3 +296,4 @@ html[data-theme=dark]{color-scheme:dark;--paper:#101b1b;--surface:#1b2928;--ink:
   .image-dialog{overflow-y:auto;overflow-x:hidden}
   .image-dialog-content{height:auto;overflow:visible}
 }
+@media(prefers-reduced-motion:reduce){.annotation-paths path.is-active,.annotation-spot.is-active::after{animation:none}}

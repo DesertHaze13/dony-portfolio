@@ -76,6 +76,13 @@ const dialogNotes=imageDialog.querySelector('.image-dialog-notes');
 const dialogConnectors=imageDialog.querySelector('.annotation-connectors');
 const connectorPaths=dialogConnectors.querySelector('.annotation-paths');
 const dialogStage=imageDialog.querySelector('.image-dialog-stage');
+let activeNoteIndex=null;
+function highlightAnnotation(index){
+  activeNoteIndex=index;
+  [...dialogNotes.children].forEach((card,i)=>card.classList.toggle('is-active',i===index));
+  [...dialogAnnotations.children].forEach((spot,i)=>spot.classList.toggle('is-active',i===index));
+  [...connectorPaths.children].forEach((path,i)=>path.classList.toggle('is-active',i===index));
+}
 let imageOpener;
 let activeScreens=[];
 let activeScreen=0;
@@ -257,20 +264,22 @@ function positionAnnotations(){
       routeAround[lines[i].right?'right':'left']=true;
     }
   }
-  for(const line of lines){
-    if(!line)continue;
+  lines.forEach((line,index)=>{
+    if(!line)return;
     const {x1,y1,x2,y2,right}=line;
     const edge=(right?image.right+8:image.left-8)-viewer.left;
     const detour=routeAround[right?'right':'left'];
     const path=document.createElementNS('http://www.w3.org/2000/svg','path');
     path.setAttribute('d',detour?`M ${x1} ${y1} L ${edge} ${y1} L ${x2} ${y2}`:`M ${x1} ${y1} L ${x2} ${y2}`);
     path.setAttribute('marker-end','url(#annotation-arrowhead)');
+    path.classList.toggle('is-active',index===activeNoteIndex);
     connectorPaths.append(path);
-  }
+  });
 }
 function renderAnnotations(screen){
   const key=screen.src.split('/').pop();
   const highlights=screenHighlights[key]||[];
+  activeNoteIndex=null;
   dialogAnnotations.replaceChildren();dialogNotes.replaceChildren();
   for(const [index,note] of highlights.entries()){
     const marker=document.createElement('span');marker.className='annotation-spot';
@@ -280,6 +289,11 @@ function renderAnnotations(screen){
     const card=document.createElement('div');card.className='image-note';
     card.innerHTML=`<span class="image-note-number">${String(index+1).padStart(2,'0')}</span><strong></strong><p></p>`;
     card.querySelector('strong').textContent=note.title;card.querySelector('p').textContent=note.why;
+    card.tabIndex=0;
+    card.addEventListener('pointerenter',()=>highlightAnnotation(index));
+    card.addEventListener('pointerleave',()=>highlightAnnotation(null));
+    card.addEventListener('focus',()=>highlightAnnotation(index));
+    card.addEventListener('blur',()=>highlightAnnotation(null));
     dialogNotes.append(card);
   }
   dialogNotes.hidden=highlights.length===0;

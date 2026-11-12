@@ -9,19 +9,22 @@ window.BubbleGlass=(()=>{
       float z=sqrt(max(0.,1.-r*r));vec3 n=normalize(vec3(p,z));
       // Wavelength-dependent interference changes with film thickness and view angle.
       // Smooth Cartesian waves avoid the -PI/PI seam of angle-based patterns.
-      float thickness=410.+85.*sin(p.x*2.3+time*.38)*cos(p.y*1.7-time*.16)+38.*sin(p.x*4.2+p.y*2.8-time*.23)+60.*p.y;
+      float thickness=410.+72.*sin(p.x*2.1+time*.47)*cos(p.y*1.8-time*.21)
+        +34.*sin(p.x*4.4+p.y*2.6-time*.31)+29.*sin(p.y*3.1-time*.17)+58.*p.y;
       vec3 phase=12.56637*1.33*thickness*max(.18,z)/vec3(650.,510.,440.);
       vec3 spectrum=pow(.5+.5*cos(phase),vec3(1.6));
       float fresnel=pow(1.-z,2.1);
       float band=smoothstep(.62,.97,r);
       float edge=exp(-pow((r-.982)/.011,2.));
-      vec3 l=normalize(vec3(-.5+light.x*.3,.65+light.y*.3,1.1));
-      float spec=pow(max(0.,dot(n,normalize(l+vec3(0.,0.,1.)))),100.);
+      vec3 l=normalize(vec3(-.48+light.x*.95,.55+light.y*.95,1.05));
+      float spec=pow(max(0.,dot(n,normalize(l+vec3(0.,0.,1.)))),65.);
+      vec3 fill=normalize(vec3(.62-light.x*.32,-.48-light.y*.32,1.15));
+      float softSpec=pow(max(0.,dot(n,normalize(fill+vec3(0.,0.,1.)))),155.);
       // Long curved studio reflections stay in world space as the film flows.
       float arc=exp(-pow((r-.88)/.018,2.))*pow(max(0.,dot(normalize(p),normalize(vec2(-.6,.8)))),9.);
       float lower=exp(-pow((r-.91)/.012,2.))*pow(max(0.,dot(normalize(p),normalize(vec2(.6,-.8)))),16.);
-      float alpha=band*(.14+fresnel*.50)+edge*.65+spec*.60+arc*.65+lower*.50;
-      vec3 color=mix(spectrum*1.2,vec3(.88,.97,1.),clamp(edge*.65+spec+arc+lower,0.,1.));
+      float alpha=band*(.14+fresnel*.50)+edge*.65+spec*.78+softSpec*.26+arc*.65+lower*.50;
+      vec3 color=mix(spectrum*1.2,vec3(.88,.97,1.),clamp(edge*.65+spec+softSpec*.65+arc+lower,0.,1.));
       alpha*=1.-smoothstep(.991,1.,r);
       gl_FragColor=vec4(color,clamp(alpha,0.,.92));
     }`;
@@ -56,6 +59,7 @@ window.BubbleGlass=(()=>{
       for(const item of items){
         const {gl,canvas,clock,pointer}=item;
         if(!canvas.isConnected)continue;
+        item.x+=(item.tx-item.x)*.18;item.y+=(item.ty-item.y)*.18;
         gl.uniform1f(clock,reduced.matches?0:t*.001+item.phase);
         gl.uniform2f(pointer,item.x,item.y);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
       }
@@ -64,6 +68,15 @@ window.BubbleGlass=(()=>{
   }
   function start(){if(!frame&&items.length)frame=requestAnimationFrame(draw)}
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)start()});
+  document.addEventListener('pointermove',e=>{
+    if(!items.length||reduced.matches)return;
+    for(const item of items){
+      const r=item.button.getBoundingClientRect();
+      item.tx=Math.max(-1,Math.min(1,(e.clientX-r.left-r.width/2)/(r.width*1.5)));
+      item.ty=Math.max(-1,Math.min(1,(r.top+r.height/2-e.clientY)/(r.height*1.5)));
+    }
+    start();
+  },{passive:true});
   reduced.addEventListener('change',start);
   function clear(){
     cancelAnimationFrame(frame);frame=0;
@@ -86,9 +99,9 @@ window.BubbleGlass=(()=>{
       const position=gl.getAttribLocation(program,'position');gl.enableVertexAttribArray(position);gl.vertexAttribPointer(position,2,gl.FLOAT,false,0,0);
       // Fixed small backing store bounds GPU work even on high-density phones.
       canvas.width=canvas.height=256;gl.viewport(0,0,256,256);
-      const item={button,canvas,gl,clock:gl.getUniformLocation(program,'time'),pointer:gl.getUniformLocation(program,'light'),phase,x:0,y:0};
-      item.move=e=>{const r=button.getBoundingClientRect();item.x=(e.clientX-r.left)/r.width*2-1;item.y=1-(e.clientY-r.top)/r.height*2;body.style.setProperty('--light-x',`${(item.x+1)*50}%`);body.style.setProperty('--light-y',`${(1-item.y)*50}%`);start()};
-      item.leave=()=>{item.x=item.y=0;start()};
+      const item={button,canvas,gl,clock:gl.getUniformLocation(program,'time'),pointer:gl.getUniformLocation(program,'light'),phase,x:0,y:0,tx:0,ty:0};
+      item.move=e=>{const r=button.getBoundingClientRect();body.style.setProperty('--light-x',`${(e.clientX-r.left)/r.width*100}%`);body.style.setProperty('--light-y',`${(e.clientY-r.top)/r.height*100}%`);start()};
+      item.leave=()=>{body.style.removeProperty('--light-x');body.style.removeProperty('--light-y');start()};
       button.addEventListener('pointermove',item.move,{passive:true});button.addEventListener('pointerleave',item.leave);
       canvas.addEventListener('webglcontextlost',()=>body.classList.remove('has-optics'));
       body.append(canvas);body.classList.add('has-optics');items.push(item);start();

@@ -71,6 +71,9 @@ const imageDialog=document.getElementById('image-dialog');
 const dialogImage=imageDialog.querySelector('img');
 const dialogCaption=document.getElementById('image-dialog-caption');
 const dialogGallery=imageDialog.querySelector('.image-dialog-gallery');
+const dialogAnnotations=imageDialog.querySelector('.image-annotations');
+const dialogNotes=imageDialog.querySelector('.image-dialog-notes');
+const dialogStage=imageDialog.querySelector('.image-dialog-stage');
 let imageOpener;
 let activeScreens=[];
 let activeScreen=0;
@@ -98,6 +101,96 @@ personalScreens['Run Detective']=[
   {src:A+'personal/run-detective-screen.png',label:'Latest run',alt:'Run Detective latest run and workout context'},
   {src:A+'personal/run-detective-trends.png',label:'Trends',alt:'Run Detective iPad trends charts for distance, pace and heart rate'}
 ];
+const screenHighlights={
+  'current-demo.png':[
+    {x:72,y:23,title:'Cash, clearly defined',why:'The balance separates money owned from credit, so the headline stays honest.'},
+    {x:28,y:60,title:'Monthly flow',why:'Income, purchases, and bills sit together; transfers are called out separately.'}
+  ],
+  'current-spending.png':[
+    {x:53,y:39,title:'Review before applying',why:'On-device AI proposes cleaner transaction details with an undo path.'},
+    {x:51,y:91,title:'Explore each slice',why:'A category ring invites a closer look at the purchases behind a total.'}
+  ],
+  'current-shortcuts.png':[
+    {x:47,y:26,title:'User-chosen alerts',why:'An iOS Shortcuts trigger watches only the selected apps.'},
+    {x:47,y:55,title:'Structured handoff',why:'The shortcut passes notification text into Current for transaction review.'}
+  ],
+  'plate-screen.png':[
+    {x:58,y:54,title:'Look back by day',why:'The date rail makes earlier meals and goals easy to revisit.'},
+    {x:52,y:84,title:'Energy at a glance',why:'The daily ring turns nutrition progress into an immediate visual cue.'}
+  ],
+  'plate-log-meal.jpg':[
+    {x:52,y:67,title:'Describe a meal',why:'A familiar dish can start with plain language instead of a long form.'},
+    {x:52,y:80,title:'Capture it your way',why:'Camera and photo import give people more than one path to log food.'}
+  ],
+  'bioenial-home.png':[
+    {x:74,y:55,title:'Learning preview',why:'The public page shows a sample activity and visible progress before sign-in.'},
+    {x:15,y:76,title:'Clear first step',why:'A direct start button and guide help new learners enter the experience.'}
+  ],
+  'bioenial-guide.png':[
+    {x:29,y:63,title:'Choose a path',why:'Role and topic links make the guide useful to students and teachers.'},
+    {x:23,y:86,title:'Guided onboarding',why:'The page explains what becomes available after selecting a class.'}
+  ],
+  'dony-lifts-screen.png':[
+    {x:78,y:25,title:'Sets logged',why:'A workout card makes completion visible while training is in progress.'},
+    {x:48,y:55,title:'The whole week',why:'Daily status and a weekly summary make consistency easy to scan.'}
+  ],
+  'dony-lifts-workout-detail.png':[
+    {x:50,y:47,title:'Every set counts',why:'Load, reps, and completion live together for fast logging mid-workout.'},
+    {x:49,y:63,title:'Plans stay flexible',why:'An extra set can be added without leaving the exercise.'}
+  ],
+  'dony-lifts-sync-demo.png':[
+    {x:49,y:24,title:'Shared workout data',why:'The demo screen shows the signed-in state for cross-device records.'},
+    {x:46,y:40,title:'A local way out',why:'Import and backup controls keep a portable copy within reach.'}
+  ],
+  'run-detective-screen.png':[
+    {x:29,y:24,title:'Health synced',why:'The visible sync state tells runners when the app last received workout data.'},
+    {x:44,y:55,title:'The latest case',why:'Distance, pace, and heart rate turn one run into a useful starting point.'}
+  ],
+  'run-detective-trends.png':[
+    {x:48,y:31,title:'Change the window',why:'Time ranges let runners inspect short and long patterns.'},
+    {x:52,y:57,title:'Weekly evidence',why:'Interactive charts show the exact week behind a distance trend.'}
+  ],
+  'wings-for-life.png':[
+    {x:52,y:36,title:'Across time zones',why:'Regional panels organize a worldwide event into readable local views.'},
+    {x:84,y:34,title:'Live from the course',why:'Video feeds bring activity from multiple locations into one screen.'}
+  ],
+  'rabobank-it.png':[
+    {x:24,y:18,title:'Mission stakes',why:'Requirements and rewards make the next decision immediately clear.'},
+    {x:52,y:62,title:'Choose a dock',why:'A spatial mission board turns progress into a place to explore.'}
+  ],
+  'nn-sustainability.png':[
+    {x:46,y:43,title:'A visible journey',why:'Illustrated milestones make learning progress feel tangible.'},
+    {x:5,y:62,title:'Character paths',why:'Profiles at the side suggest different ways through the experience.'}
+  ],
+  'arbo-techniek.png':[
+    {x:46,y:24,title:'Find a safety topic',why:'Large illustrated rows make specialist subjects easier to recognize.'},
+    {x:43,y:87,title:'Certificate actions',why:'The main actions put certificates and account connection within reach.'}
+  ]
+};
+function positionAnnotations(){
+  if(!imageDialog.open||!dialogImage.naturalWidth)return;
+  const image=dialogImage.getBoundingClientRect(),stage=dialogStage.getBoundingClientRect();
+  Object.assign(dialogAnnotations.style,{left:`${image.left-stage.left}px`,top:`${image.top-stage.top}px`,width:`${image.width}px`,height:`${image.height}px`});
+}
+function renderAnnotations(screen){
+  const key=screen.src.split('/').pop();
+  const highlights=screenHighlights[key]||[];
+  dialogAnnotations.replaceChildren();dialogNotes.replaceChildren();
+  for(const [index,note] of highlights.entries()){
+    const marker=document.createElement('span');marker.className='annotation-spot';
+    marker.style.left=`${note.x}%`;marker.style.top=`${note.y}%`;
+    marker.innerHTML=`<span class="annotation-index">${String(index+1).padStart(2,'0')}</span><span class="annotation-arrow" aria-hidden="true">↘</span>`;
+    dialogAnnotations.append(marker);
+    const card=document.createElement('div');card.className='image-note';
+    card.innerHTML=`<span class="image-note-number">${String(index+1).padStart(2,'0')} ↘</span><strong></strong><p></p>`;
+    card.querySelector('strong').textContent=note.title;card.querySelector('p').textContent=note.why;
+    dialogNotes.append(card);
+  }
+  dialogNotes.hidden=highlights.length===0;
+  requestAnimationFrame(positionAnnotations);
+}
+window.addEventListener('resize',positionAnnotations);
+if('ResizeObserver' in window)new ResizeObserver(positionAnnotations).observe(dialogImage);
 function showGalleryScreen(index,animateBubbleEntry=false){
   activeScreen=(index+activeScreens.length)%activeScreens.length;
   const screen=activeScreens[activeScreen];
@@ -106,15 +199,20 @@ function showGalleryScreen(index,animateBubbleEntry=false){
   dialogImage.onload=dialogImage.onerror=()=>{
     if(request!==galleryRequest)return;
     if(dialogImage.naturalWidth&&dialogImage.naturalHeight){
-      const visibleHeight=Math.min(dialogImage.naturalHeight,window.innerHeight*.9-95);
-      const fittedWidth=Math.min(1100,Math.max(280,Math.round(visibleHeight*dialogImage.naturalWidth/dialogImage.naturalHeight+44)));
+      const ratio=dialogImage.naturalWidth/dialogImage.naturalHeight;
+      const portrait=ratio<.8;
+      imageDialog.classList.toggle('is-portrait',portrait);
+      const visibleHeight=Math.min(dialogImage.naturalHeight,Math.max(260,window.innerHeight*.9-(portrait?95:280)));
+      const sidebar=portrait&&window.innerWidth>700?240:0;
+      const fittedWidth=Math.min(1100,Math.max(280,Math.round(visibleHeight*ratio+44+sidebar)));
       imageDialog.style.setProperty('--viewer-width',`${fittedWidth}px`);
     }
-    window.setTimeout(()=>{if(request===galleryRequest)imageDialog.classList.remove('is-loading')},240);
+    window.setTimeout(()=>{if(request===galleryRequest){imageDialog.classList.remove('is-loading');requestAnimationFrame(positionAnnotations)}},240);
   };
   dialogImage.src=screen.src;
   dialogImage.alt=screen.alt||`${activeProject} ${screen.label} screenshot`;
   dialogCaption.textContent=`${activeProject} · ${screen.label}`;
+  renderAnnotations(screen);
   renderGalleryBubbles(animateBubbleEntry);
   if(dialogImage.complete&&dialogImage.naturalWidth)dialogImage.onload();
 }

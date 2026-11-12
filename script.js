@@ -190,18 +190,20 @@ function positionAnnotations(){
   const viewer=imageDialog.getBoundingClientRect(),panel=imageDialog.querySelector('.image-dialog-content').getBoundingClientRect();
   const floating=window.innerWidth>700&&(viewer.width-panel.width)/2>230;
   imageDialog.classList.toggle('floating-notes',floating);
-  imageDialog.classList.toggle('connected-notes',window.innerWidth>700);
+  imageDialog.classList.toggle('connected-notes',floating);
   connectorPaths.replaceChildren();
-  if(window.innerWidth<=700||imageDialog.classList.contains('is-loading'))return;
+  if(!floating){
+    for(const card of dialogNotes.children){card.classList.remove('note-right');card.style.top=''}
+    return;
+  }
+  if(imageDialog.classList.contains('is-loading'))return;
   dialogConnectors.setAttribute('viewBox',`0 0 ${viewer.width} ${viewer.height}`);
   const cards=[...dialogNotes.children],spots=[...dialogAnnotations.children];
   const rightSides=spots.map(spot=>{const rect=spot.getBoundingClientRect();return rect.left+rect.width/2>image.left+image.width/2});
   cards.forEach((card,index)=>{
-    if(!floating){card.classList.remove('note-right');card.style.top='';return}
     card.classList.toggle('note-right',rightSides[index]);
   });
-  if(floating){
-    for(const right of [false,true]){
+  for(const right of [false,true]){
       const group=cards.map((card,index)=>({card,index,rect:spots[index]?.getBoundingClientRect()}))
         .filter(item=>rightSides[item.index]===right&&item.rect)
         .sort((a,b)=>a.rect.top-b.rect.top);
@@ -225,20 +227,39 @@ function positionAnnotations(){
       if(overflow>0)for(const item of group){
         item.card.style.top=`${parseFloat(item.card.style.top)-overflow}px`;
       }
-    }
   }
-  cards.forEach((card,index)=>{
+  const lines=cards.map((card,index)=>{
     const spot=spots[index];if(!spot)return;
     const a=spot.getBoundingClientRect(),b=card.getBoundingClientRect(),right=rightSides[index];
     const x1=a.left+a.width/2-viewer.left,y1=a.top+a.height/2-viewer.top;
-    const x2=(floating?(right?b.left:b.right):b.left+b.width/2)-viewer.left;
-    const y2=(floating?b.top+b.height/2:b.top)-viewer.top;
-    const bend=right?Math.min(80,(x2-x1)*.4):Math.max(-80,(x2-x1)*.4);
+    const x2=(right?b.left:b.right)-viewer.left;
+    const y2=b.top+b.height/2-viewer.top;
+    return {x1,y1,x2,y2,right};
+  });
+  const crosses=(a,b)=>{
+    const turn=(x1,y1,x2,y2,x3,y3)=>(x2-x1)*(y3-y1)-(y2-y1)*(x3-x1);
+    const first=turn(a.x1,a.y1,a.x2,a.y2,b.x1,b.y1);
+    const second=turn(a.x1,a.y1,a.x2,a.y2,b.x2,b.y2);
+    const third=turn(b.x1,b.y1,b.x2,b.y2,a.x1,a.y1);
+    const fourth=turn(b.x1,b.y1,b.x2,b.y2,a.x2,a.y2);
+    return first*second<0&&third*fourth<0;
+  };
+  const routeAround={left:false,right:false};
+  for(let i=0;i<lines.length;i++)for(let j=i+1;j<lines.length;j++){
+    if(lines[i]&&lines[j]&&lines[i].right===lines[j].right&&crosses(lines[i],lines[j])){
+      routeAround[lines[i].right?'right':'left']=true;
+    }
+  }
+  for(const line of lines){
+    if(!line)continue;
+    const {x1,y1,x2,y2,right}=line;
+    const edge=(right?image.right+8:image.left-8)-viewer.left;
+    const detour=routeAround[right?'right':'left'];
     const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-    path.setAttribute('d',floating?`M ${x1} ${y1} C ${x1+bend} ${y1}, ${x2-bend} ${y2}, ${x2} ${y2}`:`M ${x1} ${y1} C ${x1} ${y1+60}, ${x2} ${y2-55}, ${x2} ${y2}`);
+    path.setAttribute('d',detour?`M ${x1} ${y1} L ${edge} ${y1} L ${x2} ${y2}`:`M ${x1} ${y1} L ${x2} ${y2}`);
     path.setAttribute('marker-end','url(#annotation-arrowhead)');
     connectorPaths.append(path);
-  });
+  }
 }
 function renderAnnotations(screen){
   const key=screen.src.split('/').pop();

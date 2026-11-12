@@ -73,6 +73,8 @@ const dialogCaption=document.getElementById('image-dialog-caption');
 const dialogGallery=imageDialog.querySelector('.image-dialog-gallery');
 const dialogAnnotations=imageDialog.querySelector('.image-annotations');
 const dialogNotes=imageDialog.querySelector('.image-dialog-notes');
+const dialogConnectors=imageDialog.querySelector('.annotation-connectors');
+const connectorPaths=dialogConnectors.querySelector('.annotation-paths');
 const dialogStage=imageDialog.querySelector('.image-dialog-stage');
 let imageOpener;
 let activeScreens=[];
@@ -185,6 +187,33 @@ function positionAnnotations(){
   if(!imageDialog.open||!dialogImage.naturalWidth)return;
   const image=dialogImage.getBoundingClientRect(),stage=dialogStage.getBoundingClientRect();
   Object.assign(dialogAnnotations.style,{left:`${image.left-stage.left}px`,top:`${image.top-stage.top}px`,width:`${image.width}px`,height:`${image.height}px`});
+  const viewer=imageDialog.getBoundingClientRect(),panel=imageDialog.querySelector('.image-dialog-content').getBoundingClientRect();
+  const floating=window.innerWidth>700&&(viewer.width-panel.width)/2>230;
+  imageDialog.classList.toggle('floating-notes',floating);
+  imageDialog.classList.toggle('connected-notes',window.innerWidth>700);
+  connectorPaths.replaceChildren();
+  if(window.innerWidth<=700||imageDialog.classList.contains('is-loading'))return;
+  dialogConnectors.setAttribute('viewBox',`0 0 ${viewer.width} ${viewer.height}`);
+  const cards=[...dialogNotes.children],spots=[...dialogAnnotations.children];
+  const counts=[Math.ceil(cards.length/2),Math.floor(cards.length/2)],used=[0,0];
+  cards.forEach((card,index)=>{
+    if(!floating){card.classList.remove('note-right');card.style.top='';return}
+    const side=index%2,slot=used[side]++;
+    card.classList.toggle('note-right',side===1);
+    card.style.top=`${Math.round(viewer.height*(counts[side]===1?.48:.22+slot*.48))}px`;
+  });
+  cards.forEach((card,index)=>{
+    const spot=spots[index];if(!spot)return;
+    const a=spot.getBoundingClientRect(),b=card.getBoundingClientRect(),right=index%2===1;
+    const x1=a.left+a.width/2-viewer.left,y1=a.top+a.height/2-viewer.top;
+    const x2=(floating?(right?b.left:b.right):b.left+b.width/2)-viewer.left;
+    const y2=(floating?b.top+b.height/2:b.top)-viewer.top;
+    const bend=right?Math.min(80,(x2-x1)*.4):Math.max(-80,(x2-x1)*.4);
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',floating?`M ${x1} ${y1} C ${x1+bend} ${y1}, ${x2-bend} ${y2}, ${x2} ${y2}`:`M ${x1} ${y1} C ${x1} ${y1+60}, ${x2} ${y2-55}, ${x2} ${y2}`);
+    path.setAttribute('marker-end','url(#annotation-arrowhead)');
+    connectorPaths.append(path);
+  });
 }
 function renderAnnotations(screen){
   const key=screen.src.split('/').pop();
@@ -196,7 +225,7 @@ function renderAnnotations(screen){
     marker.innerHTML=`<span class="annotation-index">${String(index+1).padStart(2,'0')}</span><span class="annotation-arrow" aria-hidden="true">↘</span>`;
     dialogAnnotations.append(marker);
     const card=document.createElement('div');card.className='image-note';
-    card.innerHTML=`<span class="image-note-number">${String(index+1).padStart(2,'0')} ↘</span><strong></strong><p></p>`;
+    card.innerHTML=`<span class="image-note-number">${String(index+1).padStart(2,'0')}</span><strong></strong><p></p>`;
     card.querySelector('strong').textContent=note.title;card.querySelector('p').textContent=note.why;
     dialogNotes.append(card);
   }
@@ -205,6 +234,7 @@ function renderAnnotations(screen){
 }
 window.addEventListener('resize',positionAnnotations);
 if('ResizeObserver' in window)new ResizeObserver(positionAnnotations).observe(dialogImage);
+imageDialog.querySelector('.image-dialog-content').addEventListener('transitionend',positionAnnotations);
 function showGalleryScreen(index,animateBubbleEntry=false){
   activeScreen=(index+activeScreens.length)%activeScreens.length;
   const screen=activeScreens[activeScreen];
@@ -217,8 +247,7 @@ function showGalleryScreen(index,animateBubbleEntry=false){
       const portrait=ratio<.8;
       imageDialog.classList.toggle('is-portrait',portrait);
       const visibleHeight=Math.min(dialogImage.naturalHeight,Math.max(260,window.innerHeight*.9-(portrait?95:280)));
-      const sidebar=portrait&&window.innerWidth>700?240:0;
-      const fittedWidth=Math.min(1100,Math.max(280,Math.round(visibleHeight*ratio+44+sidebar)));
+      const fittedWidth=Math.min(1100,Math.max(280,Math.round(visibleHeight*ratio+44)));
       imageDialog.style.setProperty('--viewer-width',`${fittedWidth}px`);
     }
     window.setTimeout(()=>{if(request===galleryRequest){imageDialog.classList.remove('is-loading');requestAnimationFrame(positionAnnotations)}},240);

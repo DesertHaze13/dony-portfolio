@@ -98,7 +98,7 @@ personalScreens['Run Detective']=[
   {src:A+'personal/run-detective-screen.png',label:'Latest run',alt:'Run Detective latest run and workout context'},
   {src:A+'personal/run-detective-trends.png',label:'Trends',alt:'Run Detective iPad trends charts for distance, pace and heart rate'}
 ];
-function showGalleryScreen(index){
+function showGalleryScreen(index,animateBubbleEntry=false){
   activeScreen=(index+activeScreens.length)%activeScreens.length;
   const screen=activeScreens[activeScreen];
   const request=++galleryRequest;
@@ -115,7 +115,7 @@ function showGalleryScreen(index){
   dialogImage.src=screen.src;
   dialogImage.alt=screen.alt||`${activeProject} ${screen.label} screenshot`;
   dialogCaption.textContent=`${activeProject} · ${screen.label}`;
-  renderGalleryBubbles();
+  renderGalleryBubbles(animateBubbleEntry);
   if(dialogImage.complete&&dialogImage.naturalWidth)dialogImage.onload();
 }
 let galleryRequest=0;
@@ -152,14 +152,14 @@ async function popBubble(button,event){
   }
   await Promise.all(animations);
 }
-function renderGalleryBubbles(){
+function renderGalleryBubbles(animateEntry=false){
   window.BubbleGlass?.clear();
   dialogGallery.replaceChildren();
   const others=activeScreens.map((screen,index)=>({screen,index})).filter(item=>item.index!==activeScreen);
   others.forEach(({screen,index},position)=>{
     const button=document.createElement('button');
     button.type='button';
-    button.className=`gallery-bubble ${position%2?'bubble-right':'bubble-left'} bubble-enter`;
+    button.className=`gallery-bubble ${position%2?'bubble-right':'bubble-left'}${animateEntry?' bubble-enter':''}`;
     button.style.setProperty('--bubble-order',String(position));
     button.innerHTML='<span class="bubble-body" aria-hidden="true"><span class="bubble-film"></span><span class="bubble-shine"></span></span><span class="bubble-label"></span>';
     button.querySelector('.bubble-label').textContent=screen.label;
@@ -172,7 +172,7 @@ function renderGalleryBubbles(){
       await popBubble(button,event);
       // Closing the viewer or using arrow keys cancels a pending selection.
       if(request!==galleryRequest||!imageDialog.open){gallerySwitching=false;return}
-      showGalleryScreen(index);
+      showGalleryScreen(index,true);
       gallerySwitching=false;
       dialogGallery.querySelector('button')?.focus({preventScroll:true});
     });

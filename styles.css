@@ -225,3 +225,20 @@ html[data-theme=dark]{color-scheme:dark;--paper:#101b1b;--surface:#1b2928;--ink:
   -webkit-font-smoothing:antialiased;
 }
 @media(max-width:700px){.image-dialog .gallery-bubble .bubble-label{font-size:12px;line-height:1.2;max-width:86%}}
+/* Keep the entrance one-shot; only the small, continuous drift repeats. */
+.image-dialog .image-dialog-gallery .gallery-bubble,
+.image-dialog .image-dialog-gallery .gallery-bubble.bubble-right{
+  animation:film-drift 8s ease-in-out infinite;
+  animation-delay:calc(var(--bubble-order,0)*-2.1s);
+}
+.image-dialog .image-dialog-gallery .gallery-bubble.bubble-enter{
+  animation:film-arrive .6s ease-out both,film-drift 8s ease-in-out infinite;
+  animation-delay:0s,calc(var(--bubble-order,0)*-2.1s);
+}
+.image-dialog .image-dialog-gallery .gallery-bubble:not(.is-popping) .bubble-body{animation:none}
+@keyframes film-drift{
+  0%,100%{transform:translate3d(0,0,0) rotate(0)}
+  25%{transform:translate3d(3px,-5px,0) rotate(.8deg)}
+  50%{transform:translate3d(0,-10px,0) rotate(0)}
+  75%{transform:translate3d(-3px,-5px,0) rotate(-.8deg)}
+}

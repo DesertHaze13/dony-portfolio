@@ -204,29 +204,36 @@ function positionAnnotations(){
     card.classList.toggle('note-right',rightSides[index]);
   });
   for(const right of [false,true]){
-      const group=cards.map((card,index)=>({card,index,rect:spots[index]?.getBoundingClientRect()}))
-        .filter(item=>rightSides[item.index]===right&&item.rect)
-        .sort((a,b)=>a.rect.top-b.rect.top);
-      let bottom=14;
-      for(const item of group){
-        const height=item.card.getBoundingClientRect().height;
-        const desired=item.rect.top+item.rect.height/2-viewer.top-height/2;
-        let top=Math.max(bottom,Math.min(desired,viewer.height-height-14));
-        const cardRect=item.card.getBoundingClientRect();
-        for(const bubble of imageDialog.querySelectorAll('.gallery-bubble')){
-          const bubbleRect=bubble.getBoundingClientRect();
-          if(cardRect.left<bubbleRect.right&&cardRect.right>bubbleRect.left&&
-             viewer.top+top<bubbleRect.bottom+12&&viewer.top+top+height>bubbleRect.top-12){
-            top=Math.max(top,bubbleRect.bottom-viewer.top+16);
-          }
-        }
-        item.card.style.top=`${top+height/2}px`;
-        bottom=top+height+14;
-      }
-      const overflow=bottom-14-(viewer.height-14);
-      if(overflow>0)for(const item of group){
-        item.card.style.top=`${parseFloat(item.card.style.top)-overflow}px`;
-      }
+    const group=cards.map((card,index)=>({card,index,rect:spots[index]?.getBoundingClientRect()}))
+      .filter(item=>rightSides[item.index]===right&&item.rect)
+      .sort((a,b)=>a.rect.top-b.rect.top);
+    if(!group.length)continue;
+    const cardRect=group[0].card.getBoundingClientRect();
+    const bubbles=[...dialogGallery.querySelectorAll('.gallery-bubble')]
+      .map(bubble=>bubble.getBoundingClientRect())
+      .filter(rect=>cardRect.left<rect.right+12&&cardRect.right>rect.left-12);
+    const reservedTop=Math.max(14,...bubbles.map(rect=>rect.bottom-viewer.top+24));
+    const gap=14;
+    const heights=group.map(item=>item.card.getBoundingClientRect().height);
+    const required=heights.reduce((sum,height)=>sum+height,0)+gap*(group.length-1);
+    if(required>viewer.height-reservedTop-14){
+      imageDialog.classList.remove('floating-notes','connected-notes');
+      for(const card of cards){card.classList.remove('note-right');card.style.top=''}
+      return;
+    }
+    const tops=[];
+    let next=reservedTop;
+    group.forEach((item,index)=>{
+      const desired=item.rect.top+item.rect.height/2-viewer.top-heights[index]/2;
+      tops[index]=Math.max(next,desired);
+      next=tops[index]+heights[index]+gap;
+    });
+    let ceiling=viewer.height-14;
+    for(let index=group.length-1;index>=0;index--){
+      tops[index]=Math.min(tops[index],ceiling-heights[index]);
+      ceiling=tops[index]-gap;
+    }
+    group.forEach((item,index)=>{item.card.style.top=`${tops[index]+heights[index]/2}px`});
   }
   const lines=cards.map((card,index)=>{
     const spot=spots[index];if(!spot)return;

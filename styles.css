@@ -275,8 +275,15 @@ html[data-theme=dark]{color-scheme:dark;--paper:#101b1b;--surface:#1b2928;--ink:
   .image-dialog.floating-notes .image-note{position:absolute;left:calc((100% - var(--viewer-width,620px))/2 - 226px);width:210px;max-width:calc((100% - var(--viewer-width,620px))/2 - 24px);padding:17px 18px;border:1px solid #d5ddd1;border-radius:15px;background:var(--surface);box-shadow:0 15px 38px #0005;transform:translateY(-50%)}
   .image-dialog.floating-notes .image-note.note-right{left:auto;right:calc((100% - var(--viewer-width,620px))/2 - 226px)}
   .image-dialog.floating-notes .annotation-arrow{display:none}
+  .image-dialog.floating-notes .bubble-deco{display:none}
   .image-dialog.floating-notes .image-note p{font-size:11px}
   .image-dialog.connected-notes .annotation-connectors{display:block}
   .image-dialog.floating-notes .image-dialog-gallery .gallery-bubble,.image-dialog.floating-notes .image-dialog-gallery .gallery-bubble.bubble-right{top:3%}
 }
 @media(max-width:700px){.image-dialog-notes{width:calc(100% - 24px);margin:0 auto 24px;border-radius:15px}.annotation-connectors{display:none}}
+@media(min-width:701px){.image-dialog:not(.floating-notes){overflow-y:auto;overflow-x:hidden}}
+@media(min-width:701px){.image-dialog-close{position:fixed;top:20px;right:20px}}
+@media(max-width:700px){
+  .image-dialog{overflow-y:auto;overflow-x:hidden}
+  .image-dialog-content{height:auto;overflow:visible}
+}

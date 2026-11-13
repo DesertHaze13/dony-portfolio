@@ -245,7 +245,7 @@ html[data-theme=dark]{color-scheme:dark;--paper:#101b1b;--surface:#1b2928;--ink:
 .annotation-arrow{position:absolute;right:8px;bottom:7px;color:#b6f35b;font:700 24px/1 Montserrat,sans-serif;text-shadow:0 1px 4px #000}
 .image-dialog-notes{display:grid;width:100%;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;border-top:1px solid var(--line);background:var(--line)}
 .image-dialog-notes[hidden]{display:none}
-.image-note{min-width:0;padding:15px 17px 18px;background:var(--surface)}
+.image-note{min-width:0;padding:15px 17px 18px;background:var(--surface);cursor:pointer}
 .image-note-number{display:block;margin-bottom:7px;color:#477b49;font:800 10px/1 Montserrat,sans-serif;letter-spacing:.08em}
 .image-note strong{display:block;color:var(--ink);font:800 13px/1.2 Montserrat,sans-serif}
 .image-note p{margin:5px 0 0!important;padding:0!important;border:0!important;color:var(--muted);font:500 11px/1.5 Montserrat,sans-serif;letter-spacing:0}

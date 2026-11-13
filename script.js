@@ -91,6 +91,9 @@ const personalScreens=Object.fromEntries(personal.map(project=>[project.name,pro
 personalScreens.Current=[
   {src:A+'personal/current-demo.png',label:'Overview',alt:'Current demo dashboard with spending summary'},
   {src:A+'personal/current-spending.png',label:'Spending',alt:'Current spending screen with category exploration and on-device AI review'},
+  {src:A+'personal/current-spending-live.png',label:'AI review',alt:'Current on-device AI review controls and spending categories'},
+  {src:A+'personal/current-activity-demo.png',label:'Activity',alt:'Current activity timeline with fictional demo transactions'},
+  {src:A+'personal/current-profile-demo.png',label:'Account sync',alt:'Current account and Firebase sync with demo identity'},
   {src:A+'personal/current-shortcuts.png',label:'Automatic logging',alt:'iOS Shortcuts automation passing selected app notification text to Current for transaction review'}
 ];
 personalScreens.Bioenial=[
@@ -99,15 +102,23 @@ personalScreens.Bioenial=[
 ];
 personalScreens.Plate=[
   {src:A+'personal/plate-screen.png',label:'Daily view',alt:'Plate daily nutrition journal screenshot'},
+  {src:A+'personal/plate-history-demo.png',label:'History',alt:'Plate food history with fictional demo nutrition data'},
+  {src:A+'personal/plate-foods-demo.png',label:'My Foods',alt:'Plate saved foods and repeat meal controls with fictional demo foods'},
+  {src:A+'personal/plate-progress-demo.png',label:'Progress',alt:'Plate iPad nutrition progress charts with fictional demo measurements'},
+  {src:A+'personal/plate-settings-demo.png',label:'Settings',alt:'Plate appearance, account sync and goals with fictional demo profile'},
   {src:A+'personal/plate-log-meal.jpg',label:'Log a meal',alt:'Plate meal capture options for AI description, camera, photos and image import'}
 ];
 personalScreens["Dony's Lifts"]=[
   {src:A+'personal/dony-lifts-screen.png',label:'Workout',alt:"Dony's Lifts workout journal and weekly progress"},
+  {src:A+'personal/dony-lifts-workout-live.png',label:'Week planner',alt:"Dony's Lifts workout week, selected training day and future-week planning"},
   {src:A+'personal/dony-lifts-workout-detail.png',label:'Sets & reps',alt:"Dony's Lifts workout detail with editable sets, loads and rep targets"},
-  {src:A+'personal/dony-lifts-sync-demo.png',label:'Sync demo',alt:"Illustrative Dony's Lifts sync and local backup screen with a demo email address"}
+  {src:A+'personal/dony-lifts-profile-demo.png',label:'Profile',alt:"Dony's Lifts profile and Apple Fitness connection with demo identity"},
+  {src:A+'personal/dony-lifts-sync-demo.png',label:'Sync',alt:"Illustrative Dony's Lifts sync and local backup screen with a demo email address"},
+  {src:A+'personal/dony-lifts-analysis-demo.png',label:'Analysis',alt:"Dony's Lifts training analysis and sample health metrics marked as demo data"}
 ];
 personalScreens['Run Detective']=[
   {src:A+'personal/run-detective-screen.png',label:'Latest run',alt:'Run Detective latest run and workout context'},
+  {src:A+'personal/run-detective-history-demo.png',label:'History',alt:'Run Detective running history with fictional demo workouts'},
   {src:A+'personal/run-detective-trends.png',label:'Trends',alt:'Run Detective iPad trends charts for distance, pace and heart rate'}
 ];
 const screenHighlights={
@@ -126,6 +137,20 @@ const screenHighlights={
     {x:47,y:55,title:'Structured handoff',why:'The shortcut passes notification text into Current for transaction review.'},
     {x:50,y:65,title:'No interruption',why:'The disabled Show When Run switch keeps the configured handoff unobtrusive.'}
   ],
+  'current-spending-live.png':[
+    {x:52,y:45,title:'Review on device',why:'AI and merchant checks propose cleaner titles and categories before applying changes.'},
+    {x:42,y:58,title:'Undo stays close',why:'The last AI update can be reversed, including individual changes.'},
+    {x:50,y:86,title:'Explore the ring',why:'Each category slice leads to the purchases behind its total.'}
+  ],
+  'current-activity-demo.png':[
+    {x:50,y:46,title:'Find any moment',why:'Search and filters narrow the timeline by merchant, source, amount, or type.'},
+    {x:52,y:65,title:'Review what matters',why:'A dedicated switch surfaces records that need another look.'},
+    {x:52,y:78,title:'Recovery built in',why:'Deleted and recovered records remain accessible beside the activity history.'}
+  ],
+  'current-profile-demo.png':[
+    {x:50,y:42,title:'One identity',why:'A connected Google profile keeps the same account across devices.'},
+    {x:51,y:80,title:'Synced records',why:'Firebase keeps financial records available on signed-in devices.'}
+  ],
   'plate-screen.png':[
     {x:58,y:54,title:'Look back by day',why:'The date rail makes earlier meals and goals easy to revisit.'},
     {x:52,y:84,title:'Energy at a glance',why:'The daily ring turns nutrition progress into an immediate visual cue.'},
@@ -135,6 +160,25 @@ const screenHighlights={
     {x:52,y:67,title:'Describe a meal',why:'A familiar dish can start with plain language instead of a long form.'},
     {x:52,y:80,title:'Capture it your way',why:'Camera and photo import give people more than one path to log food.'},
     {x:53,y:58,title:'Review first',why:'The screen makes clear that each detected item is checked before it is logged.'}
+  ],
+  'plate-history-demo.png':[
+    {x:68,y:44,title:'Day by day',why:'A compact date rail shows how each day compares at a glance.'},
+    {x:50,y:64,title:'A clear target',why:'Logged calories sit next to the daily goal and remaining room.'},
+    {x:48,y:88,title:'Pattern over time',why:'The chart turns individual entries into a readable trend.'}
+  ],
+  'plate-foods-demo.png':[
+    {x:48,y:49,title:'Personal pantry',why:'Saved foods keep frequent meals one tap away.'},
+    {x:49,y:83,title:'Repeat a meal',why:'Recent meals can be logged again without re-entering ingredients.'}
+  ],
+  'plate-progress-demo.png':[
+    {x:31,y:26,title:'Change the horizon',why:'Week and month views reveal short and longer patterns.'},
+    {x:65,y:46,title:'Nutrition in context',why:'Calories and protein charts show each day against its target.'},
+    {x:54,y:78,title:'More than a calorie count',why:'Macro balance and weight trends add context to progress.'}
+  ],
+  'plate-settings-demo.png':[
+    {x:48,y:34,title:'Your appearance',why:'System, light, and dark modes let the app match the device or a personal choice.'},
+    {x:52,y:55,title:'Across devices',why:'Meals, targets, and weight history sync through the connected account.'},
+    {x:49,y:80,title:'Goals that fit',why:'Training goal and measurement units stay adjustable.'}
   ],
   'bioenial-home.png':[
     {x:74,y:55,title:'Learning preview',why:'The public page shows a sample activity and visible progress before sign-in.'},
@@ -149,6 +193,11 @@ const screenHighlights={
     {x:48,y:55,title:'The whole week',why:'Daily status and a weekly summary make consistency easy to scan.'},
     {x:48,y:76,title:'Plan ahead',why:'A future-week action lets the current day inform upcoming training plans.'}
   ],
+  'dony-lifts-workout-live.png':[
+    {x:72,y:26,title:'Every set visible',why:'The selected day shows completion and sets logged together.'},
+    {x:50,y:45,title:'A whole week at once',why:'Finished days stand out while the current day stays easy to find.'},
+    {x:51,y:77,title:'Plan ahead',why:'Today’s plan can be reused for future weeks without changing completed weeks.'}
+  ],
   'dony-lifts-workout-detail.png':[
     {x:50,y:47,title:'Every set counts',why:'Load, reps, and completion live together for fast logging mid-workout.'},
     {x:49,y:63,title:'Plans stay flexible',why:'An extra set can be added without leaving the exercise.'},
@@ -159,10 +208,25 @@ const screenHighlights={
     {x:46,y:40,title:'A local way out',why:'Import and backup controls keep a portable copy within reach.'},
     {x:49,y:47,title:'Health stays private',why:'The screen states that Apple Health measurements remain on this device.'}
   ],
+  'dony-lifts-profile-demo.png':[
+    {x:48,y:29,title:'Your training space',why:'The profile brings workout preferences and account controls into one place.'},
+    {x:50,y:46,title:'Fitness connection',why:'Apple Fitness integration keeps completed training visible in the wider activity record.'},
+    {x:48,y:73,title:'Choose the feel',why:'Appearance settings let the journal fit the device and the person using it.'}
+  ],
+  'dony-lifts-analysis-demo.png':[
+    {x:48,y:29,title:'Sessions in focus',why:'Completed training becomes a compact picture of sets and consistency.'},
+    {x:50,y:61,title:'Readiness context',why:'Recovery and rest indicators add context before the next workout.'},
+    {x:50,y:78,title:'Health in one view',why:'Sleep and heart metrics sit beside training progress instead of in separate screens.'}
+  ],
   'run-detective-screen.png':[
     {x:29,y:24,title:'Health synced',why:'The visible sync state tells runners when the app last received workout data.'},
     {x:44,y:55,title:'The latest case',why:'Distance, pace, and heart rate turn one run into a useful starting point.'},
     {x:50,y:72,title:'Honest pace context',why:'The note explains when workout pace may include pauses.'}
+  ],
+  'run-detective-history-demo.png':[
+    {x:48,y:25,title:'Every run kept',why:'A chronological archive makes earlier sessions easy to revisit.'},
+    {x:51,y:46,title:'Compare the evidence',why:'Distance, pace, and heart rate appear together on each workout.'},
+    {x:49,y:76,title:'Patterns emerge',why:'The list makes changes across weeks visible before opening a detailed chart.'}
   ],
   'run-detective-trends.png':[
     {x:48,y:31,title:'Change the window',why:'Time ranges let runners inspect short and long patterns.'},

@@ -446,7 +446,7 @@ function positionAnnotations(){
   const viewer=imageDialog.getBoundingClientRect(),panel=imageDialog.querySelector('.image-dialog-content').getBoundingClientRect();
   const grouped=imageDialog.classList.contains('bio-role-gallery');
   const usableHeight=grouped?Math.min(viewer.height,dialogGallery.getBoundingClientRect().top-viewer.top-10):viewer.height;
-  const floating=window.innerWidth>700&&(viewer.width-panel.width)/2>205;
+  const floating=!grouped&&window.innerWidth>700&&(viewer.width-panel.width)/2>205;
   imageDialog.classList.toggle('floating-notes',floating);
   imageDialog.classList.toggle('connected-notes',floating);
   connectorPaths.replaceChildren();
@@ -624,8 +624,6 @@ function renderGalleryBubbles(animateEntry=false){
   const grouped=activeProject==='Bioenial';
   const indexes=grouped?activeScreens.map((_,index)=>index):[1,2,3,4].map(offset=>(activeScreen+offset)%activeScreens.length);
   const others=[...new Set(indexes)].filter(index=>grouped||index!==activeScreen).map(index=>({screen:activeScreens[index],index}));
-  if(grouped)dialogGallery.style.setProperty('--bubble-columns',String(others.length>10?8:others.length>7?5:others.length));
-  else dialogGallery.style.removeProperty('--bubble-columns');
   const sideCounts=[0,0];
   others.forEach(({screen,index},position)=>{
     const side=position%2;
@@ -636,8 +634,10 @@ function renderGalleryBubbles(animateEntry=false){
     button.style.setProperty('--side-order',String(sideCounts[side]++));
     if(grouped){
       const sizes=[72,62,76,66,84,68,74,60,80,64,70,86,62,76,68,78];
+      const sideSlot=Math.floor(position/2);
       button.style.setProperty('--size',`${sizes[position%sizes.length]}px`);
-      button.style.setProperty('--bubble-lift',`${[1,6,3,9,0,5,7,2][position%8]}px`);
+      button.style.setProperty('--bubble-column',String(side?(sideSlot%2?5:4):(sideSlot%2?2:1)));
+      button.style.setProperty('--bubble-row',String(Math.floor(sideSlot/2)+1));
       button.setAttribute('aria-pressed',String(index===activeScreen));
     }
     button.innerHTML='<span class="bubble-body" aria-hidden="true"><span class="bubble-film"></span><span class="bubble-shine"></span></span><span class="bubble-label"></span>';

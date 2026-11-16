@@ -318,7 +318,7 @@ html[data-theme=dark]{color-scheme:dark;--paper:#101b1b;--surface:#1b2928;--ink:
 
 /* Bioenial's roles each reveal the entire set of screens in a separate bubble field. */
 .image-dialog.bio-role-gallery{width:100vw;height:100dvh;max-width:none;max-height:none;margin:0;overflow:auto}
-.image-dialog.bio-role-gallery .image-dialog-content{width:min(70vw,760px);max-height:none;margin:18px auto 205px;overflow:visible}
+.image-dialog.bio-role-gallery .image-dialog-content{width:min(56vw,760px);max-height:none;margin:18px auto 28px;overflow:visible}
 .image-dialog-roles[hidden]{display:none!important}
 .image-dialog.bio-role-gallery .image-dialog-roles{display:flex;justify-content:center;gap:7px;width:100%;padding:12px 16px 3px;background:var(--surface)}
 .role-choice{display:inline-flex;align-items:center;gap:10px;padding:10px 15px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--muted);font:700 12px/1 Montserrat,sans-serif;cursor:pointer;transition:background .25s,color .25s,transform .25s,border-color .25s}
@@ -328,19 +328,20 @@ html[data-theme=dark]{color-scheme:dark;--paper:#101b1b;--surface:#1b2928;--ink:
 .role-choice span{opacity:.65;font-size:10px;font-weight:800}
 .image-dialog.bio-role-gallery .image-dialog-stage{padding:12px 18px 18px}
 .image-dialog.bio-role-gallery .image-dialog-stage>img{max-height:min(50dvh,580px)}
-.image-dialog.bio-role-gallery .image-dialog-gallery{position:fixed!important;inset:auto auto 12px 50%!important;z-index:8;display:grid!important;grid-template-columns:repeat(var(--bubble-columns,8),minmax(0,1fr));align-items:center;justify-items:center;gap:5px 4px;width:min(1040px,94vw);max-height:210px;min-height:82px;margin:0;padding:9px 18px;border:1px solid #e9f6f245;border-radius:28px;background:color-mix(in srgb,var(--surface) 73%,transparent);box-shadow:0 20px 65px #0006;backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);transform:translateX(-50%);overflow:hidden;pointer-events:auto}
+.image-dialog.bio-role-gallery .image-dialog-gallery{position:fixed!important;inset:80px 0 auto!important;z-index:8;display:grid!important;grid-template-columns:repeat(2,minmax(70px,90px)) minmax(0,min(56vw,760px)) repeat(2,minmax(70px,90px));grid-template-rows:repeat(4,minmax(82px,1fr));align-items:center;justify-content:center;justify-items:center;gap:9px 10px;width:100vw;height:min(570px,calc(100dvh - 100px));max-height:none;min-height:0;margin:0;padding:0;transform:none;overflow:visible;pointer-events:none}
 .image-dialog.bio-role-gallery .image-dialog-gallery .gallery-bubble,
 .image-dialog.bio-role-gallery .image-dialog-gallery .gallery-bubble.bubble-right,
-.image-dialog.bio-role-gallery .image-dialog-gallery .gallery-bubble:nth-child(n+3){position:relative!important;inset:auto!important;top:var(--bubble-lift,0px)!important;right:auto!important;left:auto!important;flex:none;width:var(--size)!important;height:var(--size)!important;min-height:0;margin:0;padding:0;animation:film-drift calc(6s + var(--bubble-order)*.13s) ease-in-out infinite;animation-delay:calc(var(--bubble-order)*-.27s)}
+.image-dialog.bio-role-gallery .image-dialog-gallery .gallery-bubble:nth-child(n+3){position:relative!important;inset:auto!important;grid-column:var(--bubble-column);grid-row:var(--bubble-row);top:0!important;right:auto!important;left:auto!important;flex:none;width:var(--size)!important;height:var(--size)!important;min-height:0;margin:0;padding:0;pointer-events:auto;animation:film-drift calc(6s + var(--bubble-order)*.13s) ease-in-out infinite;animation-delay:calc(var(--bubble-order)*-.27s)}
+.image-dialog.bio-role-gallery .image-dialog-gallery .gallery-bubble,.image-dialog.bio-role-gallery .image-dialog-gallery .gallery-bubble.bubble-right{grid-column:var(--bubble-column);grid-row:var(--bubble-row)}
 .image-dialog.bio-role-gallery .gallery-bubble .bubble-label{max-width:84%;font-size:clamp(9px,.8vw,11px);line-height:1.15}
 .image-dialog.bio-role-gallery .gallery-bubble.bubble-active{opacity:1;filter:brightness(1.14) saturate(1.1)}
 .image-dialog.bio-role-gallery .gallery-bubble.bubble-active::after{content:"";position:absolute;inset:-4px;border:1px solid #b8f474a8;border-radius:50%;pointer-events:none}
 .image-dialog.bio-role-gallery .image-dialog-close{position:fixed;top:16px;right:16px}
-@media(max-width:700px){
+@media(max-width:850px){
   .image-dialog.bio-role-gallery .image-dialog-content{width:calc(100% - 20px);margin:60px auto 18px;max-height:none}
   .image-dialog.bio-role-gallery .image-dialog-stage{padding:10px 8px 12px}
   .image-dialog.bio-role-gallery .image-dialog-stage>img{max-height:none;width:100%;height:auto}
-  .image-dialog.bio-role-gallery .image-dialog-gallery{position:relative!important;display:flex!important;flex-wrap:wrap;inset:auto!important;left:auto!important;top:auto!important;width:100%;max-height:none;min-height:0;margin:12px 0 0;padding:10px;transform:none;border-radius:18px;overflow:visible}
+  .image-dialog.bio-role-gallery .image-dialog-gallery{position:relative!important;display:flex!important;flex-wrap:wrap;justify-content:center;gap:10px;inset:auto!important;left:auto!important;top:auto!important;width:100%;height:auto;max-height:none;min-height:0;margin:12px 0 0;padding:10px;transform:none;border-radius:18px;overflow:visible;pointer-events:auto}
   .image-dialog.bio-role-gallery .image-dialog-gallery .gallery-bubble,
   .image-dialog.bio-role-gallery .image-dialog-gallery .gallery-bubble.bubble-right,
   .image-dialog.bio-role-gallery .image-dialog-gallery .gallery-bubble:nth-child(n+3){top:0!important;width:clamp(56px,var(--size),74px)!important;height:clamp(56px,var(--size),74px)!important}

@@ -581,7 +581,13 @@ function showGalleryScreen(index,animateBubbleEntry=false){
   const label=activeProject==='Bioenial'?screen.label.replace(/^(Student|Admin) · |^Teacher /,''):screen.label;
   dialogCaption.textContent=activeProject==='Bioenial'?`Bioenial · ${activeBioRole[0].toUpperCase()+activeBioRole.slice(1)} · ${label} · ${activeScreen+1} / ${activeScreens.length}`:`${activeProject} · ${label} · ${activeScreen+1} / ${activeScreens.length}`;
   renderAnnotations(screen);
-  renderGalleryBubbles(animateBubbleEntry);
+  if(activeProject==='Bioenial'&&renderedBioRole===activeBioRole&&dialogGallery.children.length===activeScreens.length){
+    for(const bubble of dialogGallery.children){
+      const selected=Number(bubble.dataset.index)===activeScreen;
+      bubble.classList.toggle('bubble-active',selected);
+      bubble.setAttribute('aria-pressed',String(selected));
+    }
+  }else renderGalleryBubbles(animateBubbleEntry);
   if(dialogImage.complete&&dialogImage.naturalWidth)dialogImage.onload();
 }
 let galleryRequest=0;
@@ -618,10 +624,21 @@ async function popBubble(button,event){
   }
   await Promise.all(animations);
 }
+function positionBioenialBubbles(){
+  if(!imageDialog.classList.contains('bio-role-gallery'))return;
+  const sideSpace=(window.innerWidth-Math.min(window.innerWidth*.56,760))/2;
+  for(const bubble of dialogGallery.children){
+    bubble.style.setProperty('--bubble-x',`${Math.max(10,10+(sideSpace-100)*Number(bubble.dataset.x))}px`);
+    bubble.style.setProperty('--bubble-y',`${window.innerHeight*(.05+.85*Number(bubble.dataset.y))}px`);
+  }
+}
+window.addEventListener('resize',positionBioenialBubbles);
+let renderedBioRole=null;
 function renderGalleryBubbles(animateEntry=false){
   window.BubbleGlass?.clear();
   dialogGallery.replaceChildren();
   const grouped=activeProject==='Bioenial';
+  renderedBioRole=grouped?activeBioRole:null;
   const indexes=grouped?activeScreens.map((_,index)=>index):[1,2,3,4].map(offset=>(activeScreen+offset)%activeScreens.length);
   const others=[...new Set(indexes)].filter(index=>grouped||index!==activeScreen).map(index=>({screen:activeScreens[index],index}));
   const sideCounts=[0,0];
@@ -633,11 +650,20 @@ function renderGalleryBubbles(animateEntry=false){
     button.style.setProperty('--bubble-order',String(position));
     button.style.setProperty('--side-order',String(sideCounts[side]++));
     if(grouped){
-      const sizes=[72,62,76,66,84,68,74,60,80,64,70,86,62,76,68,78];
+      button.dataset.index=String(index);
+      const sizes=[78,58,90,64,98,72,83,54,88,63,76,96,60,84,68,92];
       const sideSlot=Math.floor(position/2);
+      const leftX=[.74,.27,.58,.9,.38,.69,.18,.83];
+      const rightX=[.35,.8,.54,.2,.73,.45,.91,.61];
+      const leftY=[.16,.28,.38,.51,.63,.72,.83,.91];
+      const rightY=[.22,.13,.43,.33,.59,.7,.8,.89];
       button.style.setProperty('--size',`${sizes[position%sizes.length]}px`);
-      button.style.setProperty('--bubble-column',String(side?(sideSlot%2?5:4):(sideSlot%2?2:1)));
-      button.style.setProperty('--bubble-row',String(Math.floor(sideSlot/2)+1));
+      button.dataset.x=String((side?rightX:leftX)[sideSlot%8]);
+      button.dataset.y=String((side?rightY:leftY)[sideSlot%8]);
+      button.style.setProperty('--bubble-sway',`${18+(position*7)%25}px`);
+      button.style.setProperty('--bubble-rise',`${28+(position*11)%28}px`);
+      button.style.setProperty('--bubble-duration',`${7.5+(position*13)%31/10}s`);
+      button.style.setProperty('--bubble-phase',`${-((position*17)%91)/10}s`);
       button.setAttribute('aria-pressed',String(index===activeScreen));
     }
     button.innerHTML='<span class="bubble-body" aria-hidden="true"><span class="bubble-film"></span><span class="bubble-shine"></span></span><span class="bubble-label"></span>';
@@ -652,6 +678,11 @@ function renderGalleryBubbles(animateEntry=false){
       // Closing the viewer or using arrow keys cancels a pending selection.
       if(request!==galleryRequest||!imageDialog.open){gallerySwitching=false;return}
       showGalleryScreen(index,true);
+      if(grouped){
+        button.classList.remove('is-popping');
+        button.classList.add('is-reforming');
+        window.setTimeout(()=>button.classList.remove('is-reforming'),550);
+      }
       gallerySwitching=false;
       dialogGallery.querySelector('button')?.focus({preventScroll:true});
     });
@@ -659,6 +690,7 @@ function renderGalleryBubbles(animateEntry=false){
     window.BubbleGlass?.mount(button,position*3.7);
   });
   dialogGallery.hidden=others.length===0;
+  if(grouped)positionBioenialBubbles();
 }
 document.addEventListener('click',event=>{
   const link=event.target.closest('a[data-lightbox]');
@@ -667,6 +699,7 @@ document.addEventListener('click',event=>{
   imageOpener=link;
   imageDialog.style.setProperty('--viewer-width','620px');
   activeProject=link.dataset.lightboxTitle||'Project screen';
+  renderedBioRole=null;
   const grouped=activeProject==='Bioenial';
   imageDialog.classList.toggle('bio-role-gallery',grouped);
   dialogRoles.hidden=!grouped;

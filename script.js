@@ -71,11 +71,35 @@ const imageDialog=document.getElementById('image-dialog');
 const dialogImage=imageDialog.querySelector('img');
 const dialogCaption=document.getElementById('image-dialog-caption');
 const dialogGallery=imageDialog.querySelector('.image-dialog-gallery');
+const dialogRoles=imageDialog.querySelector('.image-dialog-roles');
 const dialogAnnotations=imageDialog.querySelector('.image-annotations');
 const dialogNotes=imageDialog.querySelector('.image-dialog-notes');
 const dialogConnectors=imageDialog.querySelector('.annotation-connectors');
 const connectorPaths=dialogConnectors.querySelector('.annotation-paths');
 const dialogStage=imageDialog.querySelector('.image-dialog-stage');
+const bioenialRolePositions={student:0,teacher:0,admin:0};
+let activeBioRole='student';
+function renderBioenialRoles(){
+  dialogRoles.replaceChildren();
+  for(const role of ['student','teacher','admin']){
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='role-choice';
+    button.setAttribute('aria-pressed',String(role===activeBioRole));
+    button.append(role[0].toUpperCase()+role.slice(1));
+    const count=document.createElement('span');
+    count.textContent=String(bioenialRoleScreens[role].length).padStart(2,'0');
+    button.append(count);
+    button.addEventListener('click',()=>{
+      if(role===activeBioRole)return;
+      activeBioRole=role;
+      activeScreens=bioenialRoleScreens[role];
+      renderBioenialRoles();
+      showGalleryScreen(bioenialRolePositions[role],true);
+    });
+    dialogRoles.append(button);
+  }
+}
 let activeNoteIndex=null;
 function highlightAnnotation(index){
   activeNoteIndex=index;
@@ -97,7 +121,7 @@ personalScreens.Current=[
   {src:A+'personal/current-shortcuts.png',label:'Automatic logging',alt:'iOS Shortcuts automation passing selected app notification text to Current for transaction review'}
 ];
 personalScreens.Bioenial=[
-  {src:A+'personal/bioenial-home.png',label:'Home',alt:'Bioenial public home page'},
+  {src:A+'personal/bioenial-home.png',label:'Welcome',alt:'Bioenial public home page'},
   {src:A+'personal/bioenial-guide.png',label:'Learning guide',alt:'Bioenial public guide explaining learning roles and class activities'},
   {src:A+'personal/bioenial-teacher-home.webp',label:'Teacher home',alt:'Bioenial teacher dashboard and class list'},
   {src:A+'personal/bioenial-teacher-class.webp',label:'Class hub',alt:'Bioenial class hub with learning resources and activity summary'},
@@ -109,7 +133,7 @@ personalScreens.Bioenial=[
   {src:A+'personal/bioenial-teacher-assignments.webp',label:'Assignments',alt:'Bioenial assignments and submission overview'},
   {src:A+'personal/bioenial-teacher-groups.webp',label:'Group work',alt:'Bioenial collaborative assignment overview'},
   {src:A+'personal/bioenial-teacher-scores.webp',label:'KPS assessment',alt:'Bioenial science process skills assessment with fictional student names'},
-  {src:A+'personal/bioenial-student-wide-home.webp',label:'Student · Home',alt:'Bioenial student dashboard in wide view with demo identity'},
+  {src:A+'personal/bioenial-student-wide-home.webp',label:'Student · Dashboard',alt:'Bioenial student dashboard in wide view with demo identity'},
   {src:A+'personal/bioenial-student-wide-class.webp',label:'Student · Class',alt:'Bioenial class hub with class code and score hidden'},
   {src:A+'personal/bioenial-student-wide-experience.webp',label:'Student · Activities',alt:'Bioenial activity library in wide view'},
   {src:A+'personal/bioenial-student-wide-experience-detail.webp',label:'Student · Activity',alt:'Bioenial learning activity steps and submission status'},
@@ -131,6 +155,11 @@ personalScreens.Bioenial=[
   {src:A+'personal/bioenial-admin-wide-about.webp',label:'Admin · About',alt:'Bioenial about page content editor'},
   {src:A+'personal/bioenial-admin-wide-contact.webp',label:'Admin · Contact',alt:'Bioenial contact page editor for public site details'}
 ];
+const bioenialRoleScreens={
+  student:[...personalScreens.Bioenial.slice(0,2),...personalScreens.Bioenial.filter(screen=>screen.src.includes('bioenial-student-'))],
+  teacher:personalScreens.Bioenial.filter(screen=>screen.src.includes('bioenial-teacher-')),
+  admin:personalScreens.Bioenial.filter(screen=>screen.src.includes('bioenial-admin-'))
+};
 personalScreens.Plate=[
   {src:A+'personal/plate-screen.png',label:'Daily view',alt:'Plate daily nutrition journal screenshot'},
   {src:A+'personal/plate-history-demo.png',label:'History',alt:'Plate food history with fictional demo nutrition data'},
@@ -415,6 +444,8 @@ function positionAnnotations(){
   const image=dialogImage.getBoundingClientRect(),stage=dialogStage.getBoundingClientRect();
   Object.assign(dialogAnnotations.style,{left:`${image.left-stage.left}px`,top:`${image.top-stage.top}px`,width:`${image.width}px`,height:`${image.height}px`});
   const viewer=imageDialog.getBoundingClientRect(),panel=imageDialog.querySelector('.image-dialog-content').getBoundingClientRect();
+  const grouped=imageDialog.classList.contains('bio-role-gallery');
+  const usableHeight=grouped?Math.min(viewer.height,dialogGallery.getBoundingClientRect().top-viewer.top-10):viewer.height;
   const floating=window.innerWidth>700&&(viewer.width-panel.width)/2>205;
   imageDialog.classList.toggle('floating-notes',floating);
   imageDialog.classList.toggle('connected-notes',floating);
@@ -441,14 +472,14 @@ function positionAnnotations(){
       .sort((a,b)=>a.rect.top-b.rect.top);
     if(!group.length)continue;
     const cardRect=group[0].card.getBoundingClientRect();
-    const bubbles=[...dialogGallery.querySelectorAll('.gallery-bubble')]
+    const bubbles=(grouped?[]:[...dialogGallery.querySelectorAll('.gallery-bubble')])
       .map(bubble=>bubble.getBoundingClientRect())
       .filter(rect=>cardRect.left<rect.right+12&&cardRect.right>rect.left-12);
     const reservedTop=Math.max(14,...bubbles.map(rect=>rect.bottom-viewer.top+24));
     const gap=14;
     const heights=group.map(item=>item.card.getBoundingClientRect().height);
     const required=heights.reduce((sum,height)=>sum+height,0)+gap*(group.length-1);
-    if(required>viewer.height-reservedTop-14){
+    if(required>usableHeight-reservedTop-14){
       imageDialog.classList.remove('floating-notes','connected-notes');
       for(const card of cards){card.classList.remove('note-right');card.style.top=''}
       return;
@@ -460,7 +491,7 @@ function positionAnnotations(){
       tops[index]=Math.max(next,desired);
       next=tops[index]+heights[index]+gap;
     });
-    let ceiling=viewer.height-14;
+    let ceiling=usableHeight-14;
     for(let index=group.length-1;index>=0;index--){
       tops[index]=Math.min(tops[index],ceiling-heights[index]);
       ceiling=tops[index]-gap;
@@ -529,6 +560,7 @@ if('ResizeObserver' in window)new ResizeObserver(positionAnnotations).observe(di
 imageDialog.querySelector('.image-dialog-content').addEventListener('transitionend',positionAnnotations);
 function showGalleryScreen(index,animateBubbleEntry=false){
   activeScreen=(index+activeScreens.length)%activeScreens.length;
+  if(activeProject==='Bioenial')bioenialRolePositions[activeBioRole]=activeScreen;
   const screen=activeScreens[activeScreen];
   const request=++galleryRequest;
   imageDialog.classList.add('is-loading');
@@ -540,13 +572,14 @@ function showGalleryScreen(index,animateBubbleEntry=false){
       imageDialog.classList.toggle('is-portrait',portrait);
       const visibleHeight=Math.min(dialogImage.naturalHeight,Math.max(260,window.innerHeight*.9-(portrait?95:170)));
       const fittedWidth=Math.min(portrait?1100:1050,Math.max(280,Math.round(visibleHeight*ratio+44)));
-      imageDialog.style.setProperty('--viewer-width',`${fittedWidth}px`);
+      imageDialog.style.setProperty('--viewer-width',`${activeProject==='Bioenial'&&window.innerWidth>700?760:fittedWidth}px`);
     }
     window.setTimeout(()=>{if(request===galleryRequest){imageDialog.classList.remove('is-loading');requestAnimationFrame(positionAnnotations)}},240);
   };
   dialogImage.src=screen.src;
   dialogImage.alt=screen.alt||`${activeProject} ${screen.label} screenshot`;
-  dialogCaption.textContent=`${activeProject} · ${screen.label} · ${activeScreen+1} / ${activeScreens.length}`;
+  const label=activeProject==='Bioenial'?screen.label.replace(/^(Student|Admin) · |^Teacher /,''):screen.label;
+  dialogCaption.textContent=activeProject==='Bioenial'?`Bioenial · ${activeBioRole[0].toUpperCase()+activeBioRole.slice(1)} · ${label} · ${activeScreen+1} / ${activeScreens.length}`:`${activeProject} · ${label} · ${activeScreen+1} / ${activeScreens.length}`;
   renderAnnotations(screen);
   renderGalleryBubbles(animateBubbleEntry);
   if(dialogImage.complete&&dialogImage.naturalWidth)dialogImage.onload();
@@ -588,22 +621,31 @@ async function popBubble(button,event){
 function renderGalleryBubbles(animateEntry=false){
   window.BubbleGlass?.clear();
   dialogGallery.replaceChildren();
-  const indexes=[1,2,3,4].map(offset=>(activeScreen+offset)%activeScreens.length);
-  const others=[...new Set(indexes)].filter(index=>index!==activeScreen).map(index=>({screen:activeScreens[index],index}));
+  const grouped=activeProject==='Bioenial';
+  const indexes=grouped?activeScreens.map((_,index)=>index):[1,2,3,4].map(offset=>(activeScreen+offset)%activeScreens.length);
+  const others=[...new Set(indexes)].filter(index=>grouped||index!==activeScreen).map(index=>({screen:activeScreens[index],index}));
+  if(grouped)dialogGallery.style.setProperty('--bubble-columns',String(others.length>10?8:others.length>7?5:others.length));
+  else dialogGallery.style.removeProperty('--bubble-columns');
   const sideCounts=[0,0];
   others.forEach(({screen,index},position)=>{
     const side=position%2;
     const button=document.createElement('button');
     button.type='button';
-    button.className=`gallery-bubble ${side?'bubble-right':'bubble-left'}${animateEntry?' bubble-enter':''}`;
+    button.className=`gallery-bubble ${side?'bubble-right':'bubble-left'}${grouped&&index===activeScreen?' bubble-active':''}${animateEntry?' bubble-enter':''}`;
     button.style.setProperty('--bubble-order',String(position));
     button.style.setProperty('--side-order',String(sideCounts[side]++));
+    if(grouped){
+      const sizes=[72,62,76,66,84,68,74,60,80,64,70,86,62,76,68,78];
+      button.style.setProperty('--size',`${sizes[position%sizes.length]}px`);
+      button.style.setProperty('--bubble-lift',`${[1,6,3,9,0,5,7,2][position%8]}px`);
+      button.setAttribute('aria-pressed',String(index===activeScreen));
+    }
     button.innerHTML='<span class="bubble-body" aria-hidden="true"><span class="bubble-film"></span><span class="bubble-shine"></span></span><span class="bubble-label"></span>';
-    button.querySelector('.bubble-label').textContent=screen.label;
+    button.querySelector('.bubble-label').textContent=grouped?screen.label.replace(/^(Student|Admin) · /,'').replace(/^Teacher /,''):screen.label;
 
     button.setAttribute('aria-label',`Show ${activeProject} ${screen.label} screenshot`);
     button.addEventListener('click',async event=>{
-      if(gallerySwitching)return;
+      if(gallerySwitching||grouped&&index===activeScreen)return;
       gallerySwitching=true;
       const request=galleryRequest;
       await popBubble(button,event);
@@ -625,7 +667,11 @@ document.addEventListener('click',event=>{
   imageOpener=link;
   imageDialog.style.setProperty('--viewer-width','620px');
   activeProject=link.dataset.lightboxTitle||'Project screen';
-  activeScreens=personalScreens[activeProject]||[{src:link.href,label:'Overview',alt:link.querySelector('img')?.alt}];
+  const grouped=activeProject==='Bioenial';
+  imageDialog.classList.toggle('bio-role-gallery',grouped);
+  dialogRoles.hidden=!grouped;
+  if(grouped){activeBioRole='student';renderBioenialRoles()}
+  activeScreens=grouped?bioenialRoleScreens[activeBioRole]:personalScreens[activeProject]||[{src:link.href,label:'Overview',alt:link.querySelector('img')?.alt}];
   imageDialog.classList.toggle('has-gallery',activeScreens.length>1);
   showGalleryScreen(0);
   imageDialog.showModal();

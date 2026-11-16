@@ -108,7 +108,28 @@ personalScreens.Bioenial=[
   {src:A+'personal/bioenial-teacher-quiz.webp',label:'Quizzes',alt:'Bioenial teacher quiz overview'},
   {src:A+'personal/bioenial-teacher-assignments.webp',label:'Assignments',alt:'Bioenial assignments and submission overview'},
   {src:A+'personal/bioenial-teacher-groups.webp',label:'Group work',alt:'Bioenial collaborative assignment overview'},
-  {src:A+'personal/bioenial-teacher-scores.webp',label:'KPS assessment',alt:'Bioenial science process skills assessment with fictional student names'}
+  {src:A+'personal/bioenial-teacher-scores.webp',label:'KPS assessment',alt:'Bioenial science process skills assessment with fictional student names'},
+  {src:A+'personal/bioenial-student-wide-home.webp',label:'Student · Home',alt:'Bioenial student dashboard in wide view with demo identity'},
+  {src:A+'personal/bioenial-student-wide-class.webp',label:'Student · Class',alt:'Bioenial class hub with class code and score hidden'},
+  {src:A+'personal/bioenial-student-wide-experience.webp',label:'Student · Activities',alt:'Bioenial activity library in wide view'},
+  {src:A+'personal/bioenial-student-wide-experience-detail.webp',label:'Student · Activity',alt:'Bioenial learning activity steps and submission status'},
+  {src:A+'personal/bioenial-student-wide-materials.webp',label:'Student · Materials',alt:'Bioenial material library with unlockable lessons'},
+  {src:A+'personal/bioenial-student-wide-chat.webp',label:'Student · Discussion',alt:'Bioenial class discussion with a fictional example topic'},
+  {src:A+'personal/bioenial-student-wide-discussion.webp',label:'Student · Chat',alt:'Bioenial live class chat with fictional demo messages'},
+  {src:A+'personal/bioenial-student-wide-quiz.webp',label:'Student · Practice',alt:'Bioenial practice quiz card with demo score'},
+  {src:A+'personal/bioenial-student-wide-quiz-review.webp',label:'Student · Review',alt:'Bioenial answer review and explanation with demo content'},
+  {src:A+'personal/bioenial-student-wide-assignments.webp',label:'Student · Tasks',alt:'Bioenial individual assignment list with demo content'},
+  {src:A+'personal/bioenial-student-wide-assignment-detail.webp',label:'Student · Submission',alt:'Bioenial assignment deadline, submission status and demo score'},
+  {src:A+'personal/bioenial-student-wide-groups.webp',label:'Student · Groups',alt:'Bioenial group assignment list'},
+  {src:A+'personal/bioenial-student-wide-group-detail.webp',label:'Student · Teamwork',alt:'Bioenial group assignment detail and collaboration guidance'},
+  {src:A+'personal/bioenial-student-wide-results.webp',label:'Student · Progress',alt:'Bioenial science process skills with demo assessment values'},
+  {src:A+'personal/bioenial-admin-wide-dashboard.webp',label:'Admin · Overview',alt:'Bioenial admin dashboard with aggregate activity charts'},
+  {src:A+'personal/bioenial-admin-wide-students.webp',label:'Admin · Students',alt:'Bioenial student account management with fictional demo rows'},
+  {src:A+'personal/bioenial-admin-wide-teachers.webp',label:'Admin · Teachers',alt:'Bioenial teacher management with fictional demo names'},
+  {src:A+'personal/bioenial-admin-wide-classes.webp',label:'Admin · Classes',alt:'Bioenial class list with fictional demo class names'},
+  {src:A+'personal/bioenial-admin-wide-landing.webp',label:'Admin · Landing',alt:'Bioenial landing page content editor'},
+  {src:A+'personal/bioenial-admin-wide-about.webp',label:'Admin · About',alt:'Bioenial about page content editor'},
+  {src:A+'personal/bioenial-admin-wide-contact.webp',label:'Admin · Contact',alt:'Bioenial contact page editor for public site details'}
 ];
 personalScreens.Plate=[
   {src:A+'personal/plate-screen.png',label:'Daily view',alt:'Plate daily nutrition journal screenshot'},
@@ -239,6 +260,90 @@ const screenHighlights={
     {x:50,y:49,title:'Evidence by indicator',why:'A skills matrix helps teachers see progress beyond one quiz score. Student names are demo replacements.'},
     {x:50,y:84,title:'Rubric in view',why:'The star rubric gives a shared meaning to each assessment level.'}
   ],
+  'bioenial-student-wide-home.webp':[
+    {x:30,y:35,title:'A clear starting point',why:'The home screen brings class access and the next learning step into view.'},
+    {x:49,y:74,title:'Three ways to learn',why:'Study, practice, and discussion are visible as distinct paths.'}
+  ],
+  'bioenial-student-wide-class.webp':[
+    {x:38,y:38,title:'A class of its own',why:'Lessons and class activity share one recognizable home.'},
+    {x:82,y:82,title:'Progress in context',why:'Science process skills can be reviewed alongside class activity. The displayed value is demo data.'}
+  ],
+  'bioenial-student-wide-experience.webp':[
+    {x:43,y:32,title:'Learn by doing',why:'An activity is presented as something to complete, beyond reading a page.'},
+    {x:21,y:74,title:'A visible finish',why:'Completion is shown on the activity card so the next step is easy to find.'}
+  ],
+  'bioenial-student-wide-experience-detail.webp':[
+    {x:47,y:33,title:'One activity, clear steps',why:'The task is broken into parts with a visible submission count.'},
+    {x:49,y:70,title:'Work stays attached',why:'Instructions and submitted files remain alongside the activity.'}
+  ],
+  'bioenial-student-wide-materials.webp':[
+    {x:43,y:32,title:'A learning library',why:'Class materials live together in a simple, browsable view.'},
+    {x:38,y:72,title:'Earn the next lesson',why:'Locked resources signal which activity must be finished first.'}
+  ],
+  'bioenial-student-wide-chat.webp':[
+    {x:49,y:49,title:'Ask the class',why:'A question begins a focused discussion without leaving the course.'},
+    {x:49,y:69,title:'Replies stay together',why:'Comments remain under their topic. The text shown here is fictional demo content.'}
+  ],
+  'bioenial-student-wide-discussion.webp':[
+    {x:61,y:26,title:'Class conversation',why:'A dedicated room keeps quick questions near the lesson.'},
+    {x:82,y:72,title:'Reply in context',why:'Message replies stay attached to the original conversation. Messages are demo replacements.'}
+  ],
+  'bioenial-student-wide-quiz.webp':[
+    {x:41,y:31,title:'Practice anytime',why:'Students can open a quiz directly from their class.'},
+    {x:42,y:85,title:'Instant feedback',why:'The card shows completion and a score entry point; the value is replaced with demo text.'}
+  ],
+  'bioenial-student-wide-quiz-review.webp':[
+    {x:50,y:49,title:'Results explained',why:'Automatic scoring leads into a question-by-question review.'},
+    {x:42,y:74,title:'Learn from each answer',why:'Filters and explanations make the result useful after submission.'}
+  ],
+  'bioenial-student-wide-assignments.webp':[
+    {x:44,y:33,title:'Work in one place',why:'Individual assignments sit beside the rest of the class journey.'},
+    {x:42,y:80,title:'Know what is due',why:'Status, deadline, and teacher feedback are visible on each task card.'}
+  ],
+  'bioenial-student-wide-assignment-detail.webp':[
+    {x:43,y:49,title:'Submission status',why:'A learner can see whether work was submitted and assessed.'},
+    {x:49,y:81,title:'Instructions stay close',why:'The brief and submitted answer remain together for review.'}
+  ],
+  'bioenial-student-wide-groups.webp':[
+    {x:42,y:32,title:'Work together',why:'Group tasks have their own path in the classroom.'},
+    {x:43,y:79,title:'Shared progress',why:'A card shows the group deadline and assessment state at a glance.'}
+  ],
+  'bioenial-student-wide-group-detail.webp':[
+    {x:46,y:49,title:'A shared submission',why:'The group can see the work state before assessment.'},
+    {x:75,y:81,title:'Collaboration guidance',why:'The page sets expectations for preparing and reviewing work as a team.'}
+  ],
+  'bioenial-student-wide-results.webp':[
+    {x:58,y:31,title:'Skills beyond a score',why:'Science process skills give learners a view of how they are growing.'},
+    {x:50,y:73,title:'Evidence by indicator',why:'The assessment breaks progress down by skill. Personal values are hidden in this demo.'}
+  ],
+  'bioenial-admin-wide-dashboard.webp':[
+    {x:34,y:30,title:'A live overview',why:'Aggregate activity gives administrators a quick picture of the learning platform.'},
+    {x:51,y:68,title:'Activity over time',why:'Charts show how classroom participation changes across days.'}
+  ],
+  'bioenial-admin-wide-students.webp':[
+    {x:34,y:42,title:'Find the right account',why:'Search and filters support account review at scale.'},
+    {x:50,y:80,title:'Privacy by design',why:'The public sample replaces real names and email addresses with fictional entries.'}
+  ],
+  'bioenial-admin-wide-teachers.webp':[
+    {x:50,y:40,title:'Manage educators',why:'Teacher accounts can be found, added, and reviewed from one list.'},
+    {x:50,y:70,title:'Export when needed',why:'The table provides standard export controls; visible names are fictional.'}
+  ],
+  'bioenial-admin-wide-classes.webp':[
+    {x:50,y:40,title:'See every class',why:'A searchable list helps administrators keep the classroom catalog organized.'},
+    {x:50,y:70,title:'Browse at scale',why:'Pagination keeps a growing set of classes manageable. Listed names are examples.'}
+  ],
+  'bioenial-admin-wide-landing.webp':[
+    {x:49,y:31,title:'Edit the first impression',why:'Site title, introduction, and subtitle can be updated in one place.'},
+    {x:50,y:56,title:'Publish the message',why:'A single save action keeps page content management straightforward.'}
+  ],
+  'bioenial-admin-wide-about.webp':[
+    {x:50,y:30,title:'Tell the story',why:'The about page has its own editor for public information.'},
+    {x:50,y:60,title:'Content stays manageable',why:'Administrators can update copy without touching the learning flows.'}
+  ],
+  'bioenial-admin-wide-contact.webp':[
+    {x:50,y:31,title:'Keep contact current',why:'The admin editor centralizes public contact details.'},
+    {x:50,y:60,title:'One save for public details',why:'Address, email, and hours can be managed from a single form.'}
+  ],
   'dony-lifts-screen.png':[
     {x:78,y:25,title:'Sets logged',why:'A workout card makes completion visible while training is in progress.'},
     {x:48,y:55,title:'The whole week',why:'Daily status and a weekly summary make consistency easy to scan.'},
@@ -322,6 +427,11 @@ function positionAnnotations(){
   dialogConnectors.setAttribute('viewBox',`0 0 ${viewer.width} ${viewer.height}`);
   const cards=[...dialogNotes.children],spots=[...dialogAnnotations.children];
   const rightSides=spots.map(spot=>{const rect=spot.getBoundingClientRect();return rect.left+rect.width/2>image.left+image.width/2});
+  if(rightSides.length===2&&rightSides[0]===rightSides[1]){
+    const second=spots[1].getBoundingClientRect();
+    const x=(second.left+second.width/2-image.left)/image.width;
+    if(x>.45&&x<.55)rightSides[1]=!rightSides[1];
+  }
   cards.forEach((card,index)=>{
     card.classList.toggle('note-right',rightSides[index]);
   });

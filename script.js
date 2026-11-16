@@ -123,16 +123,16 @@ personalScreens.Current=[
 personalScreens.Bioenial=[
   {src:A+'personal/bioenial-home.png',label:'Welcome',alt:'Bioenial public home page'},
   {src:A+'personal/bioenial-guide.png',label:'Learning guide',alt:'Bioenial public guide explaining learning roles and class activities'},
-  {src:A+'personal/bioenial-teacher-home.webp',label:'Teacher home',alt:'Bioenial teacher dashboard and class list'},
-  {src:A+'personal/bioenial-teacher-class.webp',label:'Class hub',alt:'Bioenial class hub with learning resources and activity summary'},
-  {src:A+'personal/bioenial-teacher-experience.webp',label:'Experiences',alt:'Bioenial teacher learning experience planner'},
-  {src:A+'personal/bioenial-teacher-materials.webp',label:'Materials',alt:'Bioenial class material cards and science process indicators'},
-  {src:A+'personal/bioenial-teacher-chat.webp',label:'Class chat',alt:'Bioenial class chat with fictional demo messages'},
-  {src:A+'personal/bioenial-teacher-discussion.webp',label:'Discussion',alt:'Bioenial classroom discussion with fictional demo question'},
-  {src:A+'personal/bioenial-teacher-quiz.webp',label:'Quizzes',alt:'Bioenial teacher quiz overview'},
-  {src:A+'personal/bioenial-teacher-assignments.webp',label:'Assignments',alt:'Bioenial assignments and submission overview'},
-  {src:A+'personal/bioenial-teacher-groups.webp',label:'Group work',alt:'Bioenial collaborative assignment overview'},
-  {src:A+'personal/bioenial-teacher-scores.webp',label:'KPS assessment',alt:'Bioenial science process skills assessment with fictional student names'},
+  {src:A+'personal/bioenial-teacher-wide-home.webp',label:'Teacher home',alt:'Bioenial teacher dashboard and class list'},
+  {src:A+'personal/bioenial-teacher-wide-class.webp',label:'Class hub',alt:'Bioenial class hub with learning resources and activity summary'},
+  {src:A+'personal/bioenial-teacher-wide-experience.webp',label:'Experiences',alt:'Bioenial teacher learning experience planner'},
+  {src:A+'personal/bioenial-teacher-wide-materials.webp',label:'Materials',alt:'Bioenial class material cards and science process indicators'},
+  {src:A+'personal/bioenial-teacher-wide-chat.webp',label:'Class chat',alt:'Bioenial class chat with fictional demo messages'},
+  {src:A+'personal/bioenial-teacher-wide-discussion.webp',label:'Discussion',alt:'Bioenial classroom discussion with fictional demo question'},
+  {src:A+'personal/bioenial-teacher-wide-quiz.webp',label:'Quizzes',alt:'Bioenial teacher quiz overview'},
+  {src:A+'personal/bioenial-teacher-wide-assignments.webp',label:'Assignments',alt:'Bioenial assignments and submission overview'},
+  {src:A+'personal/bioenial-teacher-wide-groups.webp',label:'Group work',alt:'Bioenial collaborative assignment overview'},
+  {src:A+'personal/bioenial-teacher-wide-scores.webp',label:'KPS assessment',alt:'Bioenial science process skills assessment with fictional student names'},
   {src:A+'personal/bioenial-student-wide-home.webp',label:'Student · Dashboard',alt:'Bioenial student dashboard in wide view with demo identity'},
   {src:A+'personal/bioenial-student-wide-class.webp',label:'Student · Class',alt:'Bioenial class hub with class code and score hidden'},
   {src:A+'personal/bioenial-student-wide-experience.webp',label:'Student · Activities',alt:'Bioenial activity library in wide view'},
@@ -157,7 +157,7 @@ personalScreens.Bioenial=[
 ];
 const bioenialRoleScreens={
   student:[...personalScreens.Bioenial.slice(0,2),...personalScreens.Bioenial.filter(screen=>screen.src.includes('bioenial-student-'))],
-  teacher:personalScreens.Bioenial.filter(screen=>screen.src.includes('bioenial-teacher-')),
+  teacher:personalScreens.Bioenial.filter(screen=>screen.src.includes('bioenial-teacher-wide-')),
   admin:personalScreens.Bioenial.filter(screen=>screen.src.includes('bioenial-admin-'))
 };
 personalScreens.Plate=[
@@ -248,46 +248,45 @@ const screenHighlights={
     {x:29,y:63,title:'Choose a path',why:'Role and topic links make the guide useful to students and teachers.'},
     {x:23,y:86,title:'Guided onboarding',why:'The page explains what becomes available after selecting a class.'}
   ],
-  'bioenial-teacher-home.webp':[
-    {x:50,y:26,title:'Teaching starts here',why:'The dashboard puts class creation and the next teaching steps in view.'},
-    {x:52,y:70,title:'Classes in reach',why:'Teachers can search and reopen the classes they manage.'}
+  'bioenial-teacher-wide-home.webp':[
+    {x:36,y:33,title:'Teaching starts here',why:'The dashboard puts class creation and the next teaching steps in view.'},
+    {x:48,y:79,title:'Classes in reach',why:'Teachers can search and reopen the classes they manage.'}
   ],
-  'bioenial-teacher-class.webp':[
-    {x:52,y:24,title:'One class hub',why:'Materials, exercises, and discussion share a clear starting point.'},
-    {x:50,y:69,title:'Learning tools',why:'Goals, glossary, and references help teachers prepare a structured lesson.'}
+  'bioenial-teacher-wide-class.webp':[
+    {x:53,y:39,title:'One class hub',why:'Materials, exercises, and discussion share a clear starting point. The join code is hidden in this preview.'},
+    {x:60,y:88,title:'Learning tools',why:'Goals, glossary, and references help teachers prepare a structured lesson.'}
   ],
-  'bioenial-teacher-experience.webp':[
-    {x:49,y:26,title:'Activity design',why:'A teacher can create learning experiences and tie them to science process skills.'},
-    {x:50,y:64,title:'Deadline clarity',why:'Each activity keeps its instructions and submission window together.'}
+  'bioenial-teacher-wide-experience.webp':[
+    {x:40,y:39,title:'Activity design',why:'A teacher can create learning experiences and tie them to science process skills.'},
+    {x:50,y:75,title:'Deadline clarity',why:'Each activity keeps its instructions and submission window together.'}
   ],
-  'bioenial-teacher-materials.webp':[
-    {x:49,y:30,title:'Build a lesson',why:'Materials can be added to the class without leaving the teaching space.'},
-    {x:51,y:63,title:'Skills attached',why:'Science process indicators remain visible on each material card.'}
+  'bioenial-teacher-wide-materials.webp':[
+    {x:40,y:39,title:'Build a lesson',why:'Materials can be added to the class without leaving the teaching space.'},
+    {x:50,y:72,title:'Skills attached',why:'Science process indicators remain visible on each material card.'}
   ],
-  'bioenial-teacher-chat.webp':[
-    {x:50,y:13,title:'Class conversation',why:'The room gives students and teachers a direct place to ask and respond.'},
-    {x:64,y:45,title:'Replies in context',why:'Messages keep the exchange readable as a conversation. Names and content here are demo replacements.'}
+  'bioenial-teacher-wide-chat.webp':[
+    {x:53,y:35,title:'Class conversation',why:'The room gives students and teachers a direct place to ask and respond.'},
+    {x:78,y:74,title:'Replies in context',why:'Messages keep the exchange readable as a conversation. Names and content here are demo replacements.'}
   ],
-  'bioenial-teacher-discussion.webp':[
-    {x:50,y:31,title:'Prompt curiosity',why:'Teachers can start a question and invite the class into a focused discussion.'},
-    {x:50,y:80,title:'One topic, many voices',why:'A topic card gathers replies in one thread. The question shown here is demo content.'}
+  'bioenial-teacher-wide-discussion.webp':[
+    {x:51,y:50,title:'Prompt curiosity',why:'Teachers can start a question and invite the class into a focused discussion.'},
+    {x:48,y:72,title:'One topic, many voices',why:'A topic card gathers replies in one thread. The question shown here is demo content.'}
   ],
-  'bioenial-teacher-quiz.webp':[
-    {x:50,y:33,title:'Practice in class',why:'Exercises sit beside lessons so students can apply what they learned.'},
-    {x:49,y:70,title:'Review the attempt',why:'The teacher overview gives a route from each quiz to its results.'}
+  'bioenial-teacher-wide-quiz.webp':[
+    {x:40,y:40,title:'Practice in class',why:'Exercises sit beside lessons so students can apply what they learned.'},
+    {x:50,y:68,title:'Review the attempt',why:'The teacher overview gives a route from each quiz to its results.'}
   ],
-  'bioenial-teacher-assignments.webp':[
-    {x:50,y:25,title:'Set the task',why:'Teachers can publish an individual assignment from the class area.'},
-    {x:51,y:62,title:'Track submissions',why:'Instructions, deadlines, and submitted work stay connected.'}
+  'bioenial-teacher-wide-assignments.webp':[
+    {x:40,y:40,title:'Set the task',why:'Teachers can publish an individual assignment from the class area.'},
+    {x:52,y:70,title:'Track submissions',why:'Instructions, deadlines, and submitted work stay connected.'}
   ],
-  'bioenial-teacher-groups.webp':[
-    {x:50,y:28,title:'Learn together',why:'Group assignments give collaborative work its own space.'},
+  'bioenial-teacher-wide-groups.webp':[
+    {x:40,y:40,title:'Learn together',why:'Group assignments give collaborative work its own space.'},
     {x:51,y:70,title:'One shared brief',why:'The activity card keeps the task and its group progress together.'}
   ],
-  'bioenial-teacher-scores.webp':[
-    {x:50,y:16,title:'Science skills',why:'KPS assessment connects students to the process skills practiced in class.'},
-    {x:50,y:49,title:'Evidence by indicator',why:'A skills matrix helps teachers see progress beyond one quiz score. Student names are demo replacements.'},
-    {x:50,y:84,title:'Rubric in view',why:'The star rubric gives a shared meaning to each assessment level.'}
+  'bioenial-teacher-wide-scores.webp':[
+    {x:67,y:38,title:'Science skills',why:'KPS assessment connects students to the process skills practiced in class.'},
+    {x:73,y:73,title:'Evidence by indicator',why:'A skills matrix helps teachers see progress beyond one quiz score. Names and ratings shown here are demo data.'}
   ],
   'bioenial-student-wide-home.webp':[
     {x:30,y:35,title:'A clear starting point',why:'The home screen brings class access and the next learning step into view.'},

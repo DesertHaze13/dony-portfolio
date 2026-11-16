@@ -327,7 +327,7 @@ html[data-theme=dark]{color-scheme:dark;--paper:#101b1b;--surface:#1b2928;--ink:
 .role-choice[aria-pressed="true"]{border-color:#9acf65;background:#b8f474;color:#17312b;box-shadow:0 5px 15px #b8f47438}
 .role-choice span{opacity:.65;font-size:10px;font-weight:800}
 .image-dialog.bio-role-gallery .image-dialog-stage{padding:12px 18px 18px}
-.image-dialog.bio-role-gallery .image-dialog-stage>img{max-height:min(50dvh,580px)}
+.image-dialog.bio-role-gallery .image-dialog-stage>img{max-height:min(65dvh,680px)}
 .image-dialog.bio-role-gallery .image-dialog-gallery{--side-space:calc((100vw - min(56vw,760px))/2);position:fixed!important;inset:0!important;z-index:8;display:block!important;width:100vw;height:100dvh;max-height:none;min-height:0;margin:0;padding:0;transform:none;overflow:visible;pointer-events:none}
 .image-dialog.bio-role-gallery .image-dialog-gallery .gallery-bubble,
 .image-dialog.bio-role-gallery .image-dialog-gallery .gallery-bubble.bubble-right,

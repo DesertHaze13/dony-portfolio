@@ -296,3 +296,22 @@ html[data-theme=dark]{color-scheme:dark;--paper:#101b1b;--surface:#1b2928;--ink:
   .image-dialog-content{height:auto;overflow:visible}
 }
 @media(prefers-reduced-motion:reduce){.annotation-paths path.is-active,.annotation-spot.is-active::after{animation:none}}
+
+/* Keep gallery choices in separate lanes beside the screenshot. */
+@media(min-width:701px){
+  .image-dialog .image-dialog-gallery .gallery-bubble,
+  .image-dialog .image-dialog-gallery .gallery-bubble.bubble-right,
+  .image-dialog .image-dialog-gallery .gallery-bubble:nth-child(n+3),
+  .image-dialog.floating-notes .image-dialog-gallery .gallery-bubble,
+  .image-dialog.floating-notes .image-dialog-gallery .gallery-bubble.bubble-right{
+    top:calc(20px + var(--side-order,0)*148px);
+  }
+}
+@media(max-width:700px){
+  .image-dialog .image-dialog-stage{padding:16px 8px 20px}
+  .image-dialog .image-dialog-skeleton{inset:16px 8px 20px}
+  .image-dialog .image-dialog-gallery{position:relative;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;padding:12px 10px 16px;pointer-events:auto}
+  .image-dialog .image-dialog-gallery .gallery-bubble,
+  .image-dialog .image-dialog-gallery .gallery-bubble.bubble-right,
+  .image-dialog .image-dialog-gallery .gallery-bubble:nth-child(n+3){position:relative;top:auto;right:auto;left:auto;flex:0 0 76px;--size:76px;width:76px;height:76px;min-height:76px;margin:0}
+}

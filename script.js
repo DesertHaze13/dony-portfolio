@@ -98,7 +98,17 @@ personalScreens.Current=[
 ];
 personalScreens.Bioenial=[
   {src:A+'personal/bioenial-home.png',label:'Home',alt:'Bioenial public home page'},
-  {src:A+'personal/bioenial-guide.png',label:'Learning guide',alt:'Bioenial public guide explaining learning roles and class activities'}
+  {src:A+'personal/bioenial-guide.png',label:'Learning guide',alt:'Bioenial public guide explaining learning roles and class activities'},
+  {src:A+'personal/bioenial-teacher-home.webp',label:'Teacher home',alt:'Bioenial teacher dashboard and class list'},
+  {src:A+'personal/bioenial-teacher-class.webp',label:'Class hub',alt:'Bioenial class hub with learning resources and activity summary'},
+  {src:A+'personal/bioenial-teacher-experience.webp',label:'Experiences',alt:'Bioenial teacher learning experience planner'},
+  {src:A+'personal/bioenial-teacher-materials.webp',label:'Materials',alt:'Bioenial class material cards and science process indicators'},
+  {src:A+'personal/bioenial-teacher-chat.webp',label:'Class chat',alt:'Bioenial class chat with fictional demo messages'},
+  {src:A+'personal/bioenial-teacher-discussion.webp',label:'Discussion',alt:'Bioenial classroom discussion with fictional demo question'},
+  {src:A+'personal/bioenial-teacher-quiz.webp',label:'Quizzes',alt:'Bioenial teacher quiz overview'},
+  {src:A+'personal/bioenial-teacher-assignments.webp',label:'Assignments',alt:'Bioenial assignments and submission overview'},
+  {src:A+'personal/bioenial-teacher-groups.webp',label:'Group work',alt:'Bioenial collaborative assignment overview'},
+  {src:A+'personal/bioenial-teacher-scores.webp',label:'KPS assessment',alt:'Bioenial science process skills assessment with fictional student names'}
 ];
 personalScreens.Plate=[
   {src:A+'personal/plate-screen.png',label:'Daily view',alt:'Plate daily nutrition journal screenshot'},
@@ -188,6 +198,47 @@ const screenHighlights={
     {x:29,y:63,title:'Choose a path',why:'Role and topic links make the guide useful to students and teachers.'},
     {x:23,y:86,title:'Guided onboarding',why:'The page explains what becomes available after selecting a class.'}
   ],
+  'bioenial-teacher-home.webp':[
+    {x:50,y:26,title:'Teaching starts here',why:'The dashboard puts class creation and the next teaching steps in view.'},
+    {x:52,y:70,title:'Classes in reach',why:'Teachers can search and reopen the classes they manage.'}
+  ],
+  'bioenial-teacher-class.webp':[
+    {x:52,y:24,title:'One class hub',why:'Materials, exercises, and discussion share a clear starting point.'},
+    {x:50,y:69,title:'Learning tools',why:'Goals, glossary, and references help teachers prepare a structured lesson.'}
+  ],
+  'bioenial-teacher-experience.webp':[
+    {x:49,y:26,title:'Activity design',why:'A teacher can create learning experiences and tie them to science process skills.'},
+    {x:50,y:64,title:'Deadline clarity',why:'Each activity keeps its instructions and submission window together.'}
+  ],
+  'bioenial-teacher-materials.webp':[
+    {x:49,y:30,title:'Build a lesson',why:'Materials can be added to the class without leaving the teaching space.'},
+    {x:51,y:63,title:'Skills attached',why:'Science process indicators remain visible on each material card.'}
+  ],
+  'bioenial-teacher-chat.webp':[
+    {x:50,y:13,title:'Class conversation',why:'The room gives students and teachers a direct place to ask and respond.'},
+    {x:64,y:45,title:'Replies in context',why:'Messages keep the exchange readable as a conversation. Names and content here are demo replacements.'}
+  ],
+  'bioenial-teacher-discussion.webp':[
+    {x:50,y:31,title:'Prompt curiosity',why:'Teachers can start a question and invite the class into a focused discussion.'},
+    {x:50,y:80,title:'One topic, many voices',why:'A topic card gathers replies in one thread. The question shown here is demo content.'}
+  ],
+  'bioenial-teacher-quiz.webp':[
+    {x:50,y:33,title:'Practice in class',why:'Exercises sit beside lessons so students can apply what they learned.'},
+    {x:49,y:70,title:'Review the attempt',why:'The teacher overview gives a route from each quiz to its results.'}
+  ],
+  'bioenial-teacher-assignments.webp':[
+    {x:50,y:25,title:'Set the task',why:'Teachers can publish an individual assignment from the class area.'},
+    {x:51,y:62,title:'Track submissions',why:'Instructions, deadlines, and submitted work stay connected.'}
+  ],
+  'bioenial-teacher-groups.webp':[
+    {x:50,y:28,title:'Learn together',why:'Group assignments give collaborative work its own space.'},
+    {x:51,y:70,title:'One shared brief',why:'The activity card keeps the task and its group progress together.'}
+  ],
+  'bioenial-teacher-scores.webp':[
+    {x:50,y:16,title:'Science skills',why:'KPS assessment connects students to the process skills practiced in class.'},
+    {x:50,y:49,title:'Evidence by indicator',why:'A skills matrix helps teachers see progress beyond one quiz score. Student names are demo replacements.'},
+    {x:50,y:84,title:'Rubric in view',why:'The star rubric gives a shared meaning to each assessment level.'}
+  ],
   'dony-lifts-screen.png':[
     {x:78,y:25,title:'Sets logged',why:'A workout card makes completion visible while training is in progress.'},
     {x:48,y:55,title:'The whole week',why:'Daily status and a weekly summary make consistency easy to scan.'},
@@ -259,7 +310,7 @@ function positionAnnotations(){
   const image=dialogImage.getBoundingClientRect(),stage=dialogStage.getBoundingClientRect();
   Object.assign(dialogAnnotations.style,{left:`${image.left-stage.left}px`,top:`${image.top-stage.top}px`,width:`${image.width}px`,height:`${image.height}px`});
   const viewer=imageDialog.getBoundingClientRect(),panel=imageDialog.querySelector('.image-dialog-content').getBoundingClientRect();
-  const floating=window.innerWidth>700&&(viewer.width-panel.width)/2>230;
+  const floating=window.innerWidth>700&&(viewer.width-panel.width)/2>205;
   imageDialog.classList.toggle('floating-notes',floating);
   imageDialog.classList.toggle('connected-notes',floating);
   connectorPaths.replaceChildren();
@@ -378,14 +429,14 @@ function showGalleryScreen(index,animateBubbleEntry=false){
       const portrait=ratio<.8;
       imageDialog.classList.toggle('is-portrait',portrait);
       const visibleHeight=Math.min(dialogImage.naturalHeight,Math.max(260,window.innerHeight*.9-(portrait?95:280)));
-      const fittedWidth=Math.min(1100,Math.max(280,Math.round(visibleHeight*ratio+44)));
+      const fittedWidth=Math.min(portrait?1100:770,Math.max(280,Math.round(visibleHeight*ratio+44)));
       imageDialog.style.setProperty('--viewer-width',`${fittedWidth}px`);
     }
     window.setTimeout(()=>{if(request===galleryRequest){imageDialog.classList.remove('is-loading');requestAnimationFrame(positionAnnotations)}},240);
   };
   dialogImage.src=screen.src;
   dialogImage.alt=screen.alt||`${activeProject} ${screen.label} screenshot`;
-  dialogCaption.textContent=`${activeProject} · ${screen.label}`;
+  dialogCaption.textContent=`${activeProject} · ${screen.label} · ${activeScreen+1} / ${activeScreens.length}`;
   renderAnnotations(screen);
   renderGalleryBubbles(animateBubbleEntry);
   if(dialogImage.complete&&dialogImage.naturalWidth)dialogImage.onload();
@@ -427,12 +478,16 @@ async function popBubble(button,event){
 function renderGalleryBubbles(animateEntry=false){
   window.BubbleGlass?.clear();
   dialogGallery.replaceChildren();
-  const others=activeScreens.map((screen,index)=>({screen,index})).filter(item=>item.index!==activeScreen);
+  const indexes=[1,2,3,4].map(offset=>(activeScreen+offset)%activeScreens.length);
+  const others=[...new Set(indexes)].filter(index=>index!==activeScreen).map(index=>({screen:activeScreens[index],index}));
+  const sideCounts=[0,0];
   others.forEach(({screen,index},position)=>{
+    const side=position%2;
     const button=document.createElement('button');
     button.type='button';
-    button.className=`gallery-bubble ${position%2?'bubble-right':'bubble-left'}${animateEntry?' bubble-enter':''}`;
+    button.className=`gallery-bubble ${side?'bubble-right':'bubble-left'}${animateEntry?' bubble-enter':''}`;
     button.style.setProperty('--bubble-order',String(position));
+    button.style.setProperty('--side-order',String(sideCounts[side]++));
     button.innerHTML='<span class="bubble-body" aria-hidden="true"><span class="bubble-film"></span><span class="bubble-shine"></span></span><span class="bubble-label"></span>';
     button.querySelector('.bubble-label').textContent=screen.label;
 

@@ -538,8 +538,8 @@ function showGalleryScreen(index,animateBubbleEntry=false){
       const ratio=dialogImage.naturalWidth/dialogImage.naturalHeight;
       const portrait=ratio<.8;
       imageDialog.classList.toggle('is-portrait',portrait);
-      const visibleHeight=Math.min(dialogImage.naturalHeight,Math.max(260,window.innerHeight*.9-(portrait?95:280)));
-      const fittedWidth=Math.min(portrait?1100:770,Math.max(280,Math.round(visibleHeight*ratio+44)));
+      const visibleHeight=Math.min(dialogImage.naturalHeight,Math.max(260,window.innerHeight*.9-(portrait?95:170)));
+      const fittedWidth=Math.min(portrait?1100:1050,Math.max(280,Math.round(visibleHeight*ratio+44)));
       imageDialog.style.setProperty('--viewer-width',`${fittedWidth}px`);
     }
     window.setTimeout(()=>{if(request===galleryRequest){imageDialog.classList.remove('is-loading');requestAnimationFrame(positionAnnotations)}},240);

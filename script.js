@@ -77,8 +77,11 @@ const dialogNotes=imageDialog.querySelector('.image-dialog-notes');
 const dialogConnectors=imageDialog.querySelector('.annotation-connectors');
 const connectorPaths=dialogConnectors.querySelector('.annotation-paths');
 const dialogStage=imageDialog.querySelector('.image-dialog-stage');
+const scanLabel=dialogStage.querySelector('.scan-label');
 const bioenialRolePositions={student:0,teacher:0,admin:0};
 let activeBioRole='student';
+let pendingBioRole=null;
+let roleSwitchToken=0;
 function renderBioenialRoles(){
   dialogRoles.replaceChildren();
   for(const role of ['student','teacher','admin']){
@@ -86,16 +89,27 @@ function renderBioenialRoles(){
     button.type='button';
     button.className='role-choice';
     button.setAttribute('aria-pressed',String(role===activeBioRole));
+    button.classList.toggle('is-opening',role===pendingBioRole);
     button.append(role[0].toUpperCase()+role.slice(1));
     const count=document.createElement('span');
     count.textContent=String(bioenialRoleScreens[role].length).padStart(2,'0');
     button.append(count);
     button.addEventListener('click',()=>{
-      if(role===activeBioRole)return;
-      activeBioRole=role;
-      activeScreens=bioenialRoleScreens[role];
+      if(role===activeBioRole&&!pendingBioRole)return;
+      const token=++roleSwitchToken;
+      pendingBioRole=role;
+      dialogRoles.setAttribute('aria-busy','true');
+      imageDialog.classList.add('is-loading','is-switching-role');
+      scanLabel.textContent=`OPENING ${role.toUpperCase()}`;
+      dialogCaption.textContent=`Bioenial · Opening ${role[0].toUpperCase()+role.slice(1)}…`;
       renderBioenialRoles();
-      showGalleryScreen(bioenialRolePositions[role],true);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        if(token!==roleSwitchToken||!imageDialog.open)return;
+        activeBioRole=role;
+        activeScreens=bioenialRoleScreens[role];
+        renderBioenialRoles();
+        showGalleryScreen(bioenialRolePositions[role],true);
+      }));
     });
     dialogRoles.append(button);
   }
@@ -573,7 +587,12 @@ function showGalleryScreen(index,animateBubbleEntry=false){
       const fittedWidth=Math.min(portrait?1100:1050,Math.max(280,Math.round(visibleHeight*ratio+44)));
       imageDialog.style.setProperty('--viewer-width',`${activeProject==='Bioenial'&&window.innerWidth>700?760:fittedWidth}px`);
     }
-    window.setTimeout(()=>{if(request===galleryRequest){imageDialog.classList.remove('is-loading');requestAnimationFrame(positionAnnotations)}},240);
+    window.setTimeout(()=>{if(request===galleryRequest){
+      imageDialog.classList.remove('is-loading','is-switching-role');
+      if(pendingBioRole){pendingBioRole=null;dialogRoles.removeAttribute('aria-busy');renderBioenialRoles()}
+      scanLabel.textContent='LOADING FRAME';
+      requestAnimationFrame(positionAnnotations);
+    }},240);
   };
   dialogImage.src=screen.src;
   dialogImage.alt=screen.alt||`${activeProject} ${screen.label} screenshot`;
@@ -633,7 +652,9 @@ function positionBioenialBubbles(){
 }
 window.addEventListener('resize',positionBioenialBubbles);
 let renderedBioRole=null;
+let bubbleRenderId=0;
 function renderGalleryBubbles(animateEntry=false){
+  const renderId=++bubbleRenderId;
   window.BubbleGlass?.clear();
   dialogGallery.replaceChildren();
   const grouped=activeProject==='Bioenial';
@@ -641,6 +662,7 @@ function renderGalleryBubbles(animateEntry=false){
   const indexes=grouped?activeScreens.map((_,index)=>index):[1,2,3,4].map(offset=>(activeScreen+offset)%activeScreens.length);
   const others=[...new Set(indexes)].filter(index=>grouped||index!==activeScreen).map(index=>({screen:activeScreens[index],index}));
   const sideCounts=[0,0];
+  const mounts=[];
   others.forEach(({screen,index},position)=>{
     const side=position%2;
     const button=document.createElement('button');
@@ -686,10 +708,19 @@ function renderGalleryBubbles(animateEntry=false){
       dialogGallery.querySelector('button')?.focus({preventScroll:true});
     });
     dialogGallery.append(button);
-    window.BubbleGlass?.mount(button,position*3.7);
+    mounts.push([button,position*3.7]);
   });
   dialogGallery.hidden=others.length===0;
   if(grouped)positionBioenialBubbles();
+  function mountNext(){
+    if(renderId!==bubbleRenderId||!imageDialog.open)return;
+    for(let i=0;i<2&&mounts.length;i++){
+      const [button,phase]=mounts.shift();
+      window.BubbleGlass?.mount(button,phase);
+    }
+    if(mounts.length)requestAnimationFrame(mountNext);
+  }
+  if(mounts.length)requestAnimationFrame(mountNext);
 }
 document.addEventListener('click',event=>{
   const link=event.target.closest('a[data-lightbox]');
@@ -715,4 +746,4 @@ imageDialog.addEventListener('keydown',event=>{
   if(event.key==='ArrowRight'){event.preventDefault();showGalleryScreen(activeScreen+1)}
   if(event.key==='ArrowLeft'){event.preventDefault();showGalleryScreen(activeScreen-1)}
 });
-imageDialog.addEventListener('close',()=>{window.BubbleGlass?.clear();galleryRequest++;gallerySwitching=false;dialogImage.removeAttribute('src');imageOpener?.focus()});
+imageDialog.addEventListener('close',()=>{bubbleRenderId++;window.BubbleGlass?.clear();galleryRequest++;roleSwitchToken++;pendingBioRole=null;dialogRoles.removeAttribute('aria-busy');imageDialog.classList.remove('is-loading','is-switching-role');scanLabel.textContent='LOADING FRAME';gallerySwitching=false;dialogImage.removeAttribute('src');imageOpener?.focus()});

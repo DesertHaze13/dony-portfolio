@@ -326,6 +326,12 @@ html[data-theme=dark]{color-scheme:dark;--paper:#101b1b;--surface:#1b2928;--ink:
 .role-choice:focus-visible{outline:2px solid #a5db77;outline-offset:3px}
 .role-choice[aria-pressed="true"]{border-color:#9acf65;background:#b8f474;color:#17312b;box-shadow:0 5px 15px #b8f47438}
 .role-choice span{opacity:.65;font-size:10px;font-weight:800}
+.role-choice.is-opening{border-color:#b8f474;color:var(--ink);box-shadow:0 0 0 3px #b8f47433}
+.role-choice.is-opening span{display:none}
+.role-choice.is-opening::after{content:"";width:11px;height:11px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:role-spinner .75s linear infinite}
+@keyframes role-spinner{to{transform:rotate(360deg)}}
+.image-dialog.bio-role-gallery.is-switching-role .image-dialog-stage{min-height:min(65dvh,680px)}
+.image-dialog.bio-role-gallery.is-switching-role .image-dialog-skeleton{display:block}
 .image-dialog.bio-role-gallery .image-dialog-stage{padding:12px 18px 18px}
 .image-dialog.bio-role-gallery .image-dialog-stage>img{max-height:min(65dvh,680px)}
 .image-dialog.bio-role-gallery .image-dialog-gallery{--side-space:calc((100vw - min(56vw,760px))/2);position:fixed!important;inset:0!important;z-index:8;display:block!important;width:100vw;height:100dvh;max-height:none;min-height:0;margin:0;padding:0;transform:none;overflow:visible;pointer-events:none}
